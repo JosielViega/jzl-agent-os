@@ -1,0 +1,78 @@
+# Vision
+
+## O Que E O JZL Agent OS
+
+JZL Agent OS e uma CLI local, sem IA interna, para coordenar equipes de agentes de IA dentro de um workspace de projeto.
+
+Ele organiza agentes, contratos, tasks, mensagens, dependencias, journal, eventos e checagens operacionais em arquivos locais. O JZL nao tenta pensar pelo agente. Ele cria um protocolo para que agentes trabalhem com mais continuidade, limite e previsibilidade.
+
+## O Que Ele Nao E
+
+JZL nao e uma IA.
+
+JZL nao substitui Codex, ChatGPT ou outro agente.
+
+JZL nao gera codigo sozinho.
+
+JZL nao depende de API externa, banco de dados ou servidor.
+
+JZL nao e um gerenciador de projetos humano completo. Ele e uma camada operacional para agentes.
+
+## Problema Que Resolve
+
+Agentes de IA sao bons em executar tarefas locais, mas podem perder continuidade entre chats, misturar responsabilidades, ignorar bloqueios, concluir trabalho cedo demais ou tomar decisoes fora do contrato.
+
+O JZL resolve isso tornando o estado operacional explicito:
+
+- quem e o agente atual;
+- qual contrato limita sua atuacao;
+- qual task esta ativa;
+- quais mensagens chegaram;
+- quais dependencias bloqueiam conclusao;
+- quais eventos aconteceram;
+- qual contexto foi registrado no journal.
+
+## Quem Usa
+
+O JZL e usado por pessoas que trabalham com agentes de IA em projetos locais.
+
+Usuarios principais:
+
+- desenvolvedores que usam Codex em varias conversas;
+- equipes pequenas que querem separar responsabilidades entre agentes;
+- criadores de jogos, apps e ferramentas que precisam de continuidade operacional;
+- maintainers do proprio JZL Agent OS.
+
+## Como Funciona
+
+O usuario inicializa o workspace com `jzl init`.
+
+Depois disso, cada agente usa comandos JZL para descobrir seu estado:
+
+- `jzl boot --role <agent>`
+- `jzl inbox`
+- `jzl task current`
+- `jzl dependency list`
+- `jzl preflight`
+
+O estado fica em `.jzl`, mas agents nao devem editar `.jzl` manualmente. Eles devem usar comandos.
+
+## Missao
+
+O objetivo do JZL Agent OS não é tornar agentes mais inteligentes. É tornar equipes de agentes mais organizadas, previsíveis e colaborativas.
+
+## Visao Para v1.0
+
+Na v1.0, o JZL deve ser um sistema operacional local e confiavel para equipes de agentes.
+
+Direcoes esperadas:
+
+- Kernel pequeno e estavel.
+- Runtime claro para agents.
+- Templates por tipo de projeto.
+- Plugins externos por capability.
+- Event Bus com rastreabilidade forte.
+- Policies configuraveis.
+- Documentacao tratada como parte do produto.
+- Dogfooding: o JZL desenvolvido usando o proprio JZL.
+

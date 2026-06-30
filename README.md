@@ -4,6 +4,14 @@ JZL Agent OS e uma CLI local, sem IA interna, para coordenar agentes de IA dentr
 
 JZL nao substitui o Codex. O Codex continua pensando, lendo codigo e implementando. O JZL fornece o protocolo operacional para que varios chats/agentes saibam quem sao, o que podem fazer, qual task esta ativa, quais dependencias bloqueiam o trabalho e qual deve ser o proximo passo.
 
+## Documentos Centrais
+
+- [VISION.md](VISION.md): visao, missao e direcao para v1.0.
+- [docs/architecture/](docs/architecture/): arquitetura conceitual da v0.2.
+- [docs/GLOSSARY.md](docs/GLOSSARY.md): termos do sistema.
+- [docs/NAMING.md](docs/NAMING.md): padroes de nomenclatura.
+- [docs/DESIGN.md](docs/DESIGN.md): principios de design.
+
 ## Problema
 
 Chats de IA perdem contexto, misturam responsabilidades e frequentemente pulam etapas: implementam antes de validar escopo, concluem sem registrar decisoes, ignoram dependencias ou assumem tarefas fora do contrato.
