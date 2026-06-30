@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -585,8 +586,115 @@ test('boot shows only last three journal entries', async () => {
   assert.match(output.text(), /Entrada 4/);
 });
 
+test('git status shows branch, dirty state, and last commit', async () => {
+  const cwd = makeTempDir();
+  const output = capture();
+
+  await run(['init', '--type', 'game'], { cwd, io: output.io });
+  initGitRepo(cwd);
+  output.clear();
+  await run(['git', 'status'], { cwd, io: output.io });
+
+  assert.match(output.text(), /branch:/);
+  assert.match(output.text(), /modified: nao/);
+  assert.match(output.text(), /working tree: clean/);
+  assert.match(output.text(), /last commit: [a-f0-9]{40} initial commit/);
+
+  fs.writeFileSync(path.join(cwd, 'dirty.txt'), 'dirty', 'utf8');
+  output.clear();
+  await run(['git', 'status'], { cwd, io: output.io });
+  assert.match(output.text(), /modified: sim/);
+  assert.match(output.text(), /working tree: dirty/);
+});
+
+test('git link-task saves last commit on current task and git current shows it', async () => {
+  const cwd = makeTempDir();
+  const output = capture();
+
+  await run(['init', '--type', 'game'], { cwd, io: output.io });
+  initGitRepo(cwd);
+  await run(['task', 'create', '--to', 'programador', '--title', 'Vincular commit', '--description', 'Associar task ao commit.'], { cwd, io: output.io });
+  await run(['session', 'start', 'programador'], { cwd, io: output.io });
+  const taskId = firstInboxId(cwd, 'programador');
+  await run(['task', 'take', '--id', taskId], { cwd, io: output.io });
+  output.clear();
+  await run(['git', 'link-task'], { cwd, io: output.io });
+  await run(['git', 'current'], { cwd, io: output.io });
+
+  const task = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'agents', 'programador', 'inbox', `${taskId}.json`), 'utf8'));
+  assert.match(task.gitCommit, /^[a-f0-9]{40}$/);
+  assert.match(output.text(), /task:/);
+  assert.match(output.text(), /commit: [a-f0-9]{40}/);
+  assert.match(fs.readFileSync(path.join(cwd, '.jzl', 'events.log'), 'utf8'), /git.link-task/);
+  assert.match(fs.readFileSync(path.join(cwd, '.jzl', 'agents', 'programador', 'journal.md'), 'utf8'), /Git commit vinculado/);
+});
+
+test('git commands fail clearly outside git repository', async () => {
+  const cwd = makeTempDir();
+  const output = capture();
+
+  await run(['init', '--type', 'game'], { cwd, io: output.io });
+  await assert.rejects(
+    () => run(['git', 'status'], { cwd, io: output.io }),
+    /Repositorio Git nao encontrado/
+  );
+});
+
+test('status shows no session and non initialized git', async () => {
+  const cwd = makeTempDir();
+  const output = capture();
+
+  await run(['init', '--type', 'game'], { cwd, io: output.io });
+  output.clear();
+  await run(['status'], { cwd, io: output.io });
+
+  assert.match(output.text(), /tipo: game/);
+  assert.match(output.text(), /sessao: nenhuma/);
+  assert.match(output.text(), /task atual: nenhuma/);
+  assert.match(output.text(), /mensagens unread: 0/);
+  assert.match(output.text(), /dependencies pending da task: 0/);
+  assert.match(output.text(), /ultimo evento: nenhum/);
+  assert.match(output.text(), /git: nao inicializado/);
+});
+
+test('status shows operational summary with task, unread, dependency, event, and git', async () => {
+  const cwd = makeTempDir();
+  const output = capture();
+
+  await run(['init', '--type', 'game'], { cwd, io: output.io });
+  initGitRepo(cwd);
+  await run(['task', 'create', '--to', 'programador', '--title', 'Status task', '--description', 'Ver status.'], { cwd, io: output.io });
+  await run(['session', 'start', 'programador'], { cwd, io: output.io });
+  await run(['task', 'take', '--id', firstInboxId(cwd, 'programador')], { cwd, io: output.io });
+  await run(['dependency', 'create', '--to', 'gameplay', '--reason', 'Confirmar regra.'], { cwd, io: output.io });
+  await run(['send', '--to', 'programador', '--summary', 'Mensagem unread.'], { cwd, io: output.io });
+
+  output.clear();
+  await run(['status'], { cwd, io: output.io });
+
+  assert.match(output.text(), /tipo: game/);
+  assert.match(output.text(), /sessao: programador/);
+  assert.match(output.text(), /task atual: task-.*Status task/);
+  assert.match(output.text(), /mensagens unread: 1/);
+  assert.match(output.text(), /dependencies pending da task: 1/);
+  assert.match(output.text(), /ultimo evento: message/);
+  assert.match(output.text(), /git: main dirty [a-f0-9]{40} initial commit/);
+});
+
 function makeTempDir() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'jzl-agent-os-'));
+}
+
+function initGitRepo(cwd) {
+  runGit(cwd, ['init', '-b', 'main']);
+  fs.writeFileSync(path.join(cwd, 'tracked.txt'), 'initial', 'utf8');
+  runGit(cwd, ['add', '.']);
+  runGit(cwd, ['-c', 'user.name=JZL Test', '-c', 'user.email=jzl@example.test', 'commit', '-m', 'initial commit']);
+}
+
+function runGit(cwd, args) {
+  const result = spawnSync('git', args, { cwd, encoding: 'utf8' });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
 }
 
 function firstInboxId(cwd, role) {

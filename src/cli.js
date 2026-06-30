@@ -2,6 +2,7 @@ import { boot } from './commands/boot.js';
 import { createDependency, listDependencyItems, resolveDependency } from './commands/dependency.js';
 import { createHandoff } from './commands/handoff.js';
 import { guardAction } from './commands/guard.js';
+import { linkCurrentTaskToCommit, showCurrentGitLink, showGitStatus } from './commands/git.js';
 import { showHistory } from './commands/history.js';
 import { initProject } from './commands/init.js';
 import { archiveInboxMessage, readInboxMessage, showInbox } from './commands/inbox.js';
@@ -11,6 +12,7 @@ import { runPreflight } from './commands/preflight.js';
 import { showOutbox } from './commands/outbox.js';
 import { sendMessage } from './commands/send.js';
 import { resumeSession, startSession, whoami } from './commands/session.js';
+import { showStatus } from './commands/status.js';
 import { completeTask, createTask, showCurrentTask, takeTask } from './commands/task.js';
 import { parseArgs } from './parse.js';
 
@@ -42,6 +44,10 @@ export async function run(argv, options = {}) {
 
   if (domain === 'whoami') {
     return whoami({ cwd, io });
+  }
+
+  if (domain === 'status') {
+    return showStatus({ cwd, io });
   }
 
   if (domain === 'inbox' && action === 'read') {
@@ -82,6 +88,18 @@ export async function run(argv, options = {}) {
 
   if (domain === 'guard') {
     return guardAction({ cwd, action: parsed.flags.action, io });
+  }
+
+  if (domain === 'git' && action === 'status') {
+    return showGitStatus({ cwd, io });
+  }
+
+  if (domain === 'git' && action === 'link-task') {
+    return linkCurrentTaskToCommit({ cwd, io });
+  }
+
+  if (domain === 'git' && action === 'current') {
+    return showCurrentGitLink({ cwd, io });
   }
 
   if (domain === 'preflight') {
@@ -139,6 +157,7 @@ jzl boot --role <role>
 jzl session start <role>
 jzl session resume
 jzl whoami
+jzl status
 jzl inbox
 jzl inbox --all
 jzl inbox read --id <id>
@@ -151,6 +170,9 @@ jzl journal show --task current
 jzl journal show --role <role>
 jzl history
 jzl guard --action "..."
+jzl git status
+jzl git link-task
+jzl git current
 jzl preflight
 jzl task create --to <role> --title "..." --description "..."
 jzl task take --id <id>

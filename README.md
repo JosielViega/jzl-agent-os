@@ -131,6 +131,7 @@ jzl boot --role <role>
 jzl session start <role>
 jzl session resume
 jzl whoami
+jzl status
 jzl inbox
 jzl inbox --all
 jzl inbox read --id <id>
@@ -143,6 +144,9 @@ jzl journal show --task current
 jzl journal show --role <role>
 jzl history
 jzl guard --action "..."
+jzl git status
+jzl git link-task
+jzl git current
 jzl preflight
 jzl task create --to <role> --title "..." --description "..."
 jzl task take --id <id>
@@ -176,6 +180,34 @@ jzl next-step
 ```
 
 ## Desenvolvimento
+
+## Git
+
+O JZL possui uma integracao Git basica e somente local:
+
+```sh
+jzl git status
+jzl git link-task
+jzl git current
+```
+
+- `jzl git status` mostra branch atual, working tree clean/dirty e ultimo commit.
+- `jzl git link-task` exige task atual, le o ultimo commit e salva o hash na task atual.
+- `jzl git current` mostra a task atual e o commit vinculado.
+
+O JZL nao cria commits automaticamente e nao faz push.
+
+## Status
+
+`jzl status` mostra uma visao curta do estado operacional:
+
+- tipo do projeto;
+- sessao/role atual;
+- task atual;
+- mensagens unread;
+- dependencies pending da task atual;
+- ultimo evento;
+- resumo Git quando o projeto for um repositorio.
 
 ```sh
 npm test

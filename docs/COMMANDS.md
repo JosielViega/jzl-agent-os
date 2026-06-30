@@ -15,7 +15,10 @@ jzl boot --role <role>
 jzl session start <role>
 jzl session resume
 jzl whoami
+jzl status
 ```
+
+`jzl status` mostra um resumo curto do tipo do projeto, sessao atual, task atual, mensagens unread, dependencies pending, ultimo evento e Git quando disponivel.
 
 ## Inbox E Outbox
 
@@ -62,3 +65,13 @@ jzl preflight
 jzl history
 jzl next-step
 ```
+
+## Git
+
+```sh
+jzl git status
+jzl git link-task
+jzl git current
+```
+
+Esses comandos apenas leem Git e registram informacoes no estado JZL. Eles nao criam commits e nao fazem push.
