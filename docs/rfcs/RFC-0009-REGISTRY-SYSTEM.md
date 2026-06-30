@@ -147,4 +147,6 @@ Funcoes exportadas pelo Kernel:
 
 O Plugins Registry consegue registrar o plugin Git existente. O Capabilities Registry registra capabilities declaradas pelo manifest do plugin Git, incluindo `version-control`.
 
+O Plugin System foi conectado aos registries: `loadPlugins()` registra automaticamente o plugin no Plugins Registry e suas capabilities no Capabilities Registry.
+
 Esta etapa nao altera comandos, saidas da CLI ou persistencia.

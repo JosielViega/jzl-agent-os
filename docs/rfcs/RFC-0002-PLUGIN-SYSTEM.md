@@ -30,7 +30,7 @@ plugins/
   "version": "0.1.0",
   "commands": ["git status", "git link-task", "git current"],
   "events": ["task.completed", "git.taskLinked"],
-  "capabilities": ["read-git-status", "link-task-commit"]
+  "capabilities": ["version-control", "read-git-status", "link-task-commit"]
 }
 ```
 
@@ -81,5 +81,7 @@ Funcoes iniciais:
 - `listPlugins()`: lista plugins registrados.
 
 O plugin `git` registra apenas metadados nesta etapa. Os comandos `jzl git status`, `jzl git link-task` e `jzl git current` continuam no local atual e nao foram movidos.
+
+`loadPlugins()` tambem registra plugins carregados no Plugins Registry do Kernel. Capabilities declaradas no manifest sao registradas no Capabilities Registry.
 
 Esta etapa nao adiciona comandos novos e nao altera a saida da CLI.

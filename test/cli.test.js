@@ -774,6 +774,8 @@ test('event bus publishes to events log and notifies subscribers', async () => {
 
 test('plugin registry loads git plugin metadata', () => {
   clearPlugins();
+  clearKernelPlugins();
+  clearCapabilities();
   const plugins = loadPlugins();
   const gitPlugin = getPlugin('git');
 
@@ -782,6 +784,9 @@ test('plugin registry loads git plugin metadata', () => {
   assert.equal(gitPlugin.manifest.version, '0.1.0');
   assert.deepEqual(gitPlugin.manifest.commands, ['git status', 'git link-task', 'git current']);
   assert.equal(listPlugins()[0].manifest.name, 'git');
+  assert.equal(getKernelPlugin('git').manifest.name, 'git');
+  assert.equal(listKernelPlugins()[0].manifest.name, 'git');
+  assert.equal(resolveCapability('version-control').name, 'git');
 });
 
 test('kernel services registry registers and lists services', () => {
