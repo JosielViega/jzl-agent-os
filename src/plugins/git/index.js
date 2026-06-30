@@ -1,6 +1,13 @@
 import manifest from './manifest.json' with { type: 'json' };
 
-export default {
+const plugin = {
   manifest
 };
 
+plugin.providers = (manifest.providers || []).map((provider) => ({
+  ...provider,
+  plugin,
+  services: {}
+}));
+
+export default plugin;

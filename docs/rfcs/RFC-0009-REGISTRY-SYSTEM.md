@@ -46,14 +46,24 @@ Responsabilidades:
 
 ### Capabilities Registry
 
-Registra capabilities declaradas e provedores disponiveis.
+Registra capabilities declaradas.
 
 Responsabilidades:
 
-- mapear capability para plugin;
 - resolver conflitos;
 - indicar capability nao atendida;
 - permitir que agents e templates solicitem capacidades abstratas.
+
+### Providers Registry
+
+Registra providers declarados por plugins.
+
+Responsabilidades:
+
+- registrar providers;
+- consultar provider por nome;
+- listar providers;
+- resolver provider por capability.
 
 ### Templates Registry
 
@@ -96,6 +106,7 @@ Plugins podem registrar:
 
 - comandos;
 - subscribers de eventos;
+- providers;
 - capabilities fornecidas;
 - adapters;
 - validators;
@@ -110,7 +121,8 @@ Registries permitem descoberta por contrato, nao por import direto.
 Exemplo:
 
 - Um template pede `version-control`.
-- O Capabilities Registry resolve que o plugin Git fornece essa capability.
+- O Providers Registry resolve `git-provider`.
+- O provider aponta para o plugin Git.
 - O comando ou workflow usa a capability, sem acoplar o Kernel ao Git.
 
 ## Regras
@@ -133,6 +145,7 @@ Arquivos:
 - `src/kernel/registries/index.js`
 - `src/kernel/registries/servicesRegistry.js`
 - `src/kernel/registries/pluginsRegistry.js`
+- `src/kernel/registries/providersRegistry.js`
 - `src/kernel/registries/capabilitiesRegistry.js`
 - `src/kernel/registries/templatesRegistry.js`
 - `src/kernel/registries/profilesRegistry.js`
@@ -141,11 +154,12 @@ Funcoes exportadas pelo Kernel:
 
 - `registerService`, `getService`, `listServices`
 - `registerPlugin`, `getPlugin`, `listPlugins`
+- `registerProvider`, `getProvider`, `listProviders`, `resolveProviderByCapability`
 - `registerCapability`, `resolveCapability`, `listCapabilities`
 - `registerTemplate`, `getTemplate`, `listTemplates`
 - `registerProfile`, `getProfile`, `listProfiles`
 
-O Plugins Registry consegue registrar o plugin Git existente. O Capabilities Registry registra capabilities declaradas pelo manifest do plugin Git, incluindo `version-control`.
+O Plugins Registry consegue registrar o plugin Git existente. O Providers Registry registra `git-provider`. O Capabilities Registry registra capabilities declaradas pelo manifest do plugin Git, incluindo `version-control`.
 
 O Plugin System foi conectado aos registries: `loadPlugins()` registra automaticamente o plugin no Plugins Registry e suas capabilities no Capabilities Registry.
 

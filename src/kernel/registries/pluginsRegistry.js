@@ -1,4 +1,5 @@
 import { registerCapability } from './capabilitiesRegistry.js';
+import { registerProvider } from './providersRegistry.js';
 
 const plugins = new Map();
 
@@ -7,6 +8,9 @@ export function registerPlugin(plugin) {
     throw new Error('Plugin invalido: manifest.name obrigatorio.');
   }
   plugins.set(plugin.manifest.name, plugin);
+  for (const provider of plugin.providers || []) {
+    registerProvider(provider);
+  }
   for (const capability of plugin.manifest.capabilities || []) {
     registerCapability(capability, {
       name: plugin.manifest.name,
@@ -27,4 +31,3 @@ export function listPlugins() {
 export function clearPlugins() {
   plugins.clear();
 }
-

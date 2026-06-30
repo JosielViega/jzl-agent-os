@@ -17,6 +17,8 @@
 - Implementado Workspace Manifest minimo em `jzl init --type game`, mantendo `.jzl/type.json` por compatibilidade.
 - Implementado Registry System minimo em memoria no Kernel, sem alterar comportamento da CLI.
 - Conectado Plugin System ao Registry System para registrar plugins e capabilities durante `loadPlugins()`.
+- Implementado Capability Resolver minimo sobre o Capabilities Registry.
+- Implementado Provider System minimo entre Capability e Plugin.
 - Atualizado roadmap com secao v0.2.
 - Adicionada nota no README sobre arquitetura via RFCs.
 

@@ -1,4 +1,5 @@
 export { getAgent } from './agents.js';
+export { getCapabilityProvider, hasCapability, listAvailableCapabilities, requireCapability } from './capabilities.js';
 export { createDependency, readDependencies, resolveDependency } from './dependencies.js';
 export { emit, publish, readLog, subscribe } from './eventBus.js';
 export { publishEvent, readEvents } from './events.js';
@@ -13,8 +14,12 @@ export {
   listPlugins,
   registerPlugin,
   listCapabilities,
+  getProvider,
+  listProviders,
   registerCapability,
+  registerProvider,
   resolveCapability,
+  resolveProviderByCapability,
   getTemplate,
   listTemplates,
   registerTemplate,

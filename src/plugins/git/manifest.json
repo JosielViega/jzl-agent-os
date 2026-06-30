@@ -13,5 +13,14 @@
     "version-control",
     "read-git-status",
     "link-task-commit"
+  ],
+  "providers": [
+    {
+      "name": "git-provider",
+      "capabilities": [
+        "version-control"
+      ],
+      "services": []
+    }
   ]
 }

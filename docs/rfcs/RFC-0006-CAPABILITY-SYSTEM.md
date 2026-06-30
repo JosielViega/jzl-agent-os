@@ -1,6 +1,6 @@
 # RFC-0006: Capability System
 
-Status: draft  
+Status: draft, resolver minimo iniciado  
 Target: v0.2
 
 ## Problema
@@ -13,22 +13,24 @@ Se o Kernel precisar conhecer nomes de ferramentas, ele deixa de ser generico. I
 
 O Kernel deve depender de capabilities, nao de plugins especificos.
 
-Capability e uma capacidade operacional declarada por um plugin. O Kernel e os agents podem pedir uma capacidade abstrata, e o Capabilities Registry resolve qual plugin fornece essa capacidade, consultando o Plugins Registry quando necessario.
+Capability e uma capacidade operacional declarada por um provider. O Kernel e os agents podem pedir uma capacidade abstrata, e o resolver retorna um provider que implementa essa capability.
 
 Exemplos:
 
-- Git Plugin fornece capability: `version-control`
-- Docker Plugin fornece capability: `container-runtime`
-- Godot Plugin fornece capability: `game-engine`
-- NPM Plugin fornece capability: `package-manager`
+- Git Provider fornece capability: `version-control`
+- Docker Provider fornece capability: `container-runtime`
+- Godot Provider fornece capability: `game-engine`
+- NPM Provider fornece capability: `package-manager`
 
 ## Plugin vs Capability
 
-Plugin e a implementacao concreta.
+Plugin e o pacote concreto.
+
+Provider e a implementacao operacional da capability.
 
 Capability e o contrato abstrato.
 
-Um plugin pode fornecer varias capabilities. Uma capability pode ser fornecida por plugins diferentes. Por exemplo, `version-control` pode ser fornecida por Git hoje e por outro sistema no futuro.
+Um plugin pode registrar varios providers. Um provider pode fornecer varias capabilities. Uma capability pode ser fornecida por providers diferentes. Por exemplo, `version-control` pode ser fornecida por `git-provider` hoje e por `perforce-provider` no futuro.
 
 ## Agents Pedem Capabilities
 
@@ -57,15 +59,31 @@ Estrutura sugerida:
 
 ## Impacto Nos Registries
 
+O Providers Registry deve resolver capability para provider disponivel.
+
 O Capabilities Registry deve evoluir para:
 
-- resolver capability para plugin disponivel;
 - detectar conflito quando varios plugins oferecem a mesma capability;
 - permitir templates recomendarem capabilities em vez de nomes fixos;
 - permitir policies exigirem capabilities minimas.
 
-O Plugins Registry continua responsavel por plugins descobertos, carregados, registrados e ativos. O Capabilities Registry consulta esses metadados para resolver providers.
+O Plugins Registry continua responsavel por plugins descobertos, carregados, registrados e ativos. Providers apontam para plugins.
 
 ## Regra
 
-O Kernel nao escolhe Git, Docker, Godot, Unity ou NPM. O Kernel pede capabilities. Plugins implementam capabilities.
+O Kernel nao escolhe Git, Docker, Godot, Unity ou NPM. O Kernel pede capabilities. Providers implementam capabilities. Plugins registram providers.
+
+## Implementacao Inicial
+
+A camada inicial de resolver vive em `src/kernel/capabilities.js`.
+
+Funcoes:
+
+- `hasCapability(name)`
+- `requireCapability(name)`
+- `getCapabilityProvider(name)`
+- `listAvailableCapabilities()`
+
+O resolver usa Providers Registry e Capabilities Registry internamente. `requireCapability(name)` falha com erro claro quando a capability nao existe.
+
+Depois de `loadPlugins()`, a capability `version-control` resolve para o provider `git-provider`.

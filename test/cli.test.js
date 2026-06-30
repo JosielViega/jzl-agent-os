@@ -5,13 +5,16 @@ import os from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
 import { run } from '../src/cli.js';
+import { getCapabilityProvider, hasCapability, listAvailableCapabilities, requireCapability } from '../src/kernel/capabilities.js';
 import { publish, readLog, subscribe } from '../src/kernel/eventBus.js';
 import {
   clearCapabilities,
   clearPlugins as clearKernelPlugins,
   clearProfiles,
+  clearProviders,
   clearServices,
   clearTemplates,
+  getProvider,
   getPlugin as getKernelPlugin,
   getProfile,
   getService,
@@ -19,13 +22,16 @@ import {
   listCapabilities,
   listPlugins as listKernelPlugins,
   listProfiles,
+  listProviders,
   listServices,
   listTemplates,
+  registerProvider,
   registerPlugin as registerKernelPlugin,
   registerProfile,
   registerService,
   registerTemplate,
-  resolveCapability
+  resolveCapability,
+  resolveProviderByCapability
 } from '../src/kernel/registries/index.js';
 import { findWorkspaceRoot, readWorkspaceManifest } from '../src/kernel/workspace.js';
 import { loadPlugins, getPlugin, listPlugins } from '../src/plugins/index.js';
@@ -776,6 +782,7 @@ test('plugin registry loads git plugin metadata', () => {
   clearPlugins();
   clearKernelPlugins();
   clearCapabilities();
+  clearProviders();
   const plugins = loadPlugins();
   const gitPlugin = getPlugin('git');
 
@@ -787,6 +794,7 @@ test('plugin registry loads git plugin metadata', () => {
   assert.equal(getKernelPlugin('git').manifest.name, 'git');
   assert.equal(listKernelPlugins()[0].manifest.name, 'git');
   assert.equal(resolveCapability('version-control').name, 'git');
+  assert.equal(resolveProviderByCapability('version-control').name, 'git-provider');
 });
 
 test('kernel services registry registers and lists services', () => {
@@ -802,24 +810,73 @@ test('kernel services registry registers and lists services', () => {
 test('kernel plugins registry registers git plugin and capabilities', () => {
   clearKernelPlugins();
   clearCapabilities();
+  clearProviders();
 
   registerKernelPlugin(gitPlugin);
 
   assert.equal(getKernelPlugin('git').manifest.name, 'git');
   assert.equal(listKernelPlugins()[0].manifest.name, 'git');
   assert.equal(resolveCapability('version-control').name, 'git');
+  assert.equal(resolveProviderByCapability('version-control').name, 'git-provider');
   assert.equal(listCapabilities().some((item) => item.name === 'version-control'), true);
 });
 
 test('kernel capabilities registry resolves version-control to git', () => {
   clearKernelPlugins();
   clearCapabilities();
+  clearProviders();
 
   registerKernelPlugin(gitPlugin);
   const provider = resolveCapability('version-control');
 
   assert.equal(provider.name, 'git');
   assert.equal(provider.plugin.manifest.name, 'git');
+});
+
+test('kernel providers registry registers and resolves providers', () => {
+  clearProviders();
+  const provider = {
+    name: 'git-provider',
+    plugin: gitPlugin,
+    capabilities: ['version-control'],
+    services: {}
+  };
+
+  registerProvider(provider);
+
+  assert.equal(getProvider('git-provider').name, 'git-provider');
+  assert.equal(listProviders()[0].name, 'git-provider');
+  assert.equal(resolveProviderByCapability('version-control').name, 'git-provider');
+  assert.equal(resolveProviderByCapability('version-control').plugin.manifest.name, 'git');
+  assert.equal(resolveProviderByCapability('version-control').capabilities.includes('version-control'), true);
+});
+
+test('capability resolver resolves version-control after loading plugins', () => {
+  clearPlugins();
+  clearKernelPlugins();
+  clearCapabilities();
+  clearProviders();
+
+  loadPlugins();
+
+  assert.equal(hasCapability('version-control'), true);
+  assert.equal(getCapabilityProvider('version-control').name, 'git-provider');
+  assert.equal(getCapabilityProvider('version-control').plugin.manifest.name, 'git');
+  assert.equal(requireCapability('version-control').name, 'git-provider');
+  assert.equal(listAvailableCapabilities().some((item) => item.name === 'version-control'), true);
+});
+
+test('capability resolver fails clearly when capability is missing', () => {
+  clearKernelPlugins();
+  clearCapabilities();
+  clearProviders();
+
+  assert.equal(hasCapability('missing-capability'), false);
+  assert.equal(getCapabilityProvider('missing-capability'), null);
+  assert.throws(
+    () => requireCapability('missing-capability'),
+    /Capability nao disponivel: missing-capability/
+  );
 });
 
 test('kernel templates registry registers and lists templates', () => {
