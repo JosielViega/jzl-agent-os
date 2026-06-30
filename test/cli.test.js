@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
 import { run } from '../src/cli.js';
+import { publish, readLog, subscribe } from '../src/kernel/eventBus.js';
 
 test('init creates JZL and game project structure', async () => {
   const cwd = makeTempDir();
@@ -679,6 +680,27 @@ test('status shows operational summary with task, unread, dependency, event, and
   assert.match(output.text(), /dependencies pending da task: 1/);
   assert.match(output.text(), /ultimo evento: message/);
   assert.match(output.text(), /git: main dirty [a-f0-9]{40} initial commit/);
+});
+
+test('event bus publishes to events log and notifies subscribers', async () => {
+  const cwd = makeTempDir();
+  const output = capture();
+  const type = `event.bus.test.${Date.now()}`;
+  let seen = null;
+
+  await run(['init', '--type', 'game'], { cwd, io: output.io });
+  const unsubscribe = subscribe(type, (event) => {
+    seen = event;
+  });
+  const event = publish(type, { cwd, role: 'programador' });
+  unsubscribe();
+
+  const [logged] = readLog(cwd, 1);
+  assert.equal(event.type, type);
+  assert.equal(seen.type, type);
+  assert.equal(seen.role, 'programador');
+  assert.equal(logged.type, type);
+  assert.equal(logged.role, 'programador');
 });
 
 function makeTempDir() {

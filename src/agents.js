@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import { appendText, ensureDir, jzlPath, listJson, makeId, nowIso, readJson, readText, writeJson } from './fs-store.js';
+import { publish as publishBusEvent, readLog } from './kernel/eventBus.js';
 
 export const ROLE_AGENTS = ['diretor', 'arquiteto', 'programador', 'revisor', 'testador', 'documentador'];
 export const GAME_SECTORS = ['gameplay', 'performance', 'ui-game', 'audio', 'save-system', 'level-design'];
@@ -83,27 +84,11 @@ export function createAgentMessage(cwd, { from, to, type = 'message', title = ''
 }
 
 export function appendEvent(cwd, type, data) {
-  const event = {
-    at: nowIso(),
-    type,
-    ...data
-  };
-  appendText(jzlPath(cwd, 'events.log'), `${JSON.stringify(event)}\n`);
+  publishBusEvent(type, { cwd, ...data });
 }
 
 export function readEvents(cwd, limit = 10) {
-  const lines = readText(jzlPath(cwd, 'events.log'), '')
-    .split(/\r?\n/)
-    .filter(Boolean);
-  return lines
-    .slice(-limit)
-    .map((line) => {
-      try {
-        return JSON.parse(line);
-      } catch {
-        return { at: '', type: 'invalid', raw: line };
-      }
-    });
+  return readLog(cwd, limit);
 }
 
 export function appendJournal(cwd, role, text) {

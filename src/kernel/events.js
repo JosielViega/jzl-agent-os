@@ -1,10 +1,9 @@
-import { appendEvent, readEvents as readAgentEvents } from '../agents.js';
+import { publish, readLog } from './eventBus.js';
 
 export function publishEvent(cwd, type, data = {}) {
-  appendEvent(cwd, type, data);
+  return publish(type, { cwd, ...data });
 }
 
 export function readEvents(cwd, limit = 10) {
-  return readAgentEvents(cwd, limit);
+  return readLog(cwd, limit);
 }
-

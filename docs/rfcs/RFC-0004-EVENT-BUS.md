@@ -1,6 +1,6 @@
 # RFC-0004: Event Bus
 
-Status: draft  
+Status: draft, Event Bus minimo iniciado  
 Target: v0.2
 
 ## Objetivo
@@ -59,3 +59,17 @@ Subscribers sao funcoes registradas para reagir a eventos. Exemplos:
 
 Comandos publicam eventos; subscribers e plugins reagem. Comandos nao devem chamar diretamente integracoes externas quando um evento puder representar melhor a mudanca operacional.
 
+## Implementacao Minima
+
+A primeira versao do Event Bus vive em `src/kernel/eventBus.js`.
+
+Funcoes iniciais:
+
+- `publish(type, payload)`: grava o evento no `events.log` e notifica subscribers em memoria.
+- `subscribe(type, handler)`: registra um handler em memoria e retorna uma funcao de unsubscribe.
+- `emit(type, payload)`: notifica subscribers sem gravar no log.
+- `readLog(cwd, limit)`: le eventos recentes do `events.log`.
+
+O `events.log` continua sendo gravado no mesmo formato JSON Lines usado na v0.1. Subscribers ainda sao apenas em memoria e nao sobrevivem entre execucoes da CLI.
+
+`publishEvent()` passa a usar `eventBus.publish()`, e leituras do historico passam a usar `eventBus.readLog()` por baixo.
