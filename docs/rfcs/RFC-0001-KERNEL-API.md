@@ -1,6 +1,6 @@
 # RFC-0001: Kernel API
 
-Status: draft  
+Status: draft, API minima iniciada  
 Target: v0.2
 
 ## Objetivo
@@ -86,3 +86,19 @@ loadTemplate(input)
 
 Comandos CLI nao devem manipular `.jzl` diretamente. Todo comando funcional deve usar o Kernel API.
 
+## Implementacao Inicial
+
+A camada `src/kernel` foi iniciada como fachada minima sobre o armazenamento atual. Ela centraliza operacoes de tasks, mensagens, dependencies, journal, eventos, agents e projeto sem alterar o comportamento externo dos comandos.
+
+Modulos iniciais:
+
+- `src/kernel/index.js`
+- `src/kernel/tasks.js`
+- `src/kernel/agents.js`
+- `src/kernel/messages.js`
+- `src/kernel/dependencies.js`
+- `src/kernel/journal.js`
+- `src/kernel/events.js`
+- `src/kernel/project.js`
+
+Esta etapa nao adiciona comandos novos. A migracao completa deve acontecer de forma incremental, mantendo compatibilidade de saida e testes.

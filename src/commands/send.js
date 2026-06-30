@@ -1,4 +1,4 @@
-import { createAgentMessage } from '../agents.js';
+import { sendMessage as kernelSendMessage } from '../kernel/index.js';
 import { requireCurrentRole } from '../state.js';
 
 export function sendMessage({ cwd, to, summary, io }) {
@@ -6,7 +6,7 @@ export function sendMessage({ cwd, to, summary, io }) {
   if (!summary) throw new Error('Informe resumo: --summary "..."');
 
   const from = requireCurrentRole(cwd);
-  const message = createAgentMessage(cwd, {
+  const message = kernelSendMessage(cwd, {
     from,
     to,
     type: 'message',

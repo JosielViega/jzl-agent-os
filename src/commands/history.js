@@ -1,4 +1,4 @@
-import { readEvents } from '../agents.js';
+import { readEvents } from '../kernel/index.js';
 
 export function showHistory({ cwd, io }) {
   const events = readEvents(cwd, 10);

@@ -1,9 +1,10 @@
-import { listInbox, listInboxAll, readInboxItem, saveInboxItem } from '../agents.js';
+import { readInbox } from '../kernel/index.js';
+import { readInboxItem, saveInboxItem } from '../agents.js';
 import { requireCurrentRole } from '../state.js';
 
 export function showInbox({ cwd, all = false, io }) {
   const role = requireCurrentRole(cwd);
-  const tasks = all ? listInboxAll(cwd, role) : listInbox(cwd, role);
+  const tasks = readInbox(cwd, role, { all });
 
   if (!tasks.length) {
     io.log('inbox: vazia');

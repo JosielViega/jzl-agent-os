@@ -1,11 +1,12 @@
-import { appendJournal, readJournalEntries, readJournalSummary } from '../agents.js';
+import { readJournalEntries, readJournalSummary } from '../agents.js';
+import { addJournalEntry as kernelAddJournalEntry } from '../kernel/index.js';
 import { getCurrentTask, requireCurrentRole } from '../state.js';
 
 export function addJournalEntry({ cwd, text, io }) {
   if (!text) throw new Error('Informe texto: --text "..."');
   const role = requireCurrentRole(cwd);
   const task = getCurrentTask(cwd, role);
-  appendJournal(cwd, role, task ? `Task: ${task.id}\n${text}` : text);
+  kernelAddJournalEntry(cwd, { role, text, taskId: task ? task.id : null });
   io.log(`journal atualizado: ${role}`);
 }
 
