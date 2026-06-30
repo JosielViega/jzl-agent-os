@@ -15,6 +15,7 @@
 - Criado RFC-0008 para Workspace Manifest e conceito formal de Workspace.
 - Criados RFCs para Registry System, Lifecycle Model e Domain Model.
 - Implementado Workspace Manifest minimo em `jzl init --type game`, mantendo `.jzl/type.json` por compatibilidade.
+- Implementado Registry System minimo em memoria no Kernel, sem alterar comportamento da CLI.
 - Atualizado roadmap com secao v0.2.
 - Adicionada nota no README sobre arquitetura via RFCs.
 

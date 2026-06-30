@@ -1,6 +1,6 @@
 # RFC-0009: Registry System
 
-Status: draft  
+Status: draft, implementacao inicial  
 Target: v0.2
 
 ## Objetivo
@@ -122,8 +122,29 @@ Exemplo:
 
 ## Fora De Escopo
 
-Este RFC nao implementa registries.
-
-Este RFC nao altera o plugin registry minimo existente.
-
 Este RFC nao adiciona comandos.
+
+## Implementacao Inicial
+
+A implementacao inicial cria registries em memoria dentro de `src/kernel/registries`.
+
+Arquivos:
+
+- `src/kernel/registries/index.js`
+- `src/kernel/registries/servicesRegistry.js`
+- `src/kernel/registries/pluginsRegistry.js`
+- `src/kernel/registries/capabilitiesRegistry.js`
+- `src/kernel/registries/templatesRegistry.js`
+- `src/kernel/registries/profilesRegistry.js`
+
+Funcoes exportadas pelo Kernel:
+
+- `registerService`, `getService`, `listServices`
+- `registerPlugin`, `getPlugin`, `listPlugins`
+- `registerCapability`, `resolveCapability`, `listCapabilities`
+- `registerTemplate`, `getTemplate`, `listTemplates`
+- `registerProfile`, `getProfile`, `listProfiles`
+
+O Plugins Registry consegue registrar o plugin Git existente. O Capabilities Registry registra capabilities declaradas pelo manifest do plugin Git, incluindo `version-control`.
+
+Esta etapa nao altera comandos, saidas da CLI ou persistencia.

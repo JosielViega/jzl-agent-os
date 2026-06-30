@@ -6,9 +6,31 @@ import path from 'node:path';
 import { test } from 'node:test';
 import { run } from '../src/cli.js';
 import { publish, readLog, subscribe } from '../src/kernel/eventBus.js';
+import {
+  clearCapabilities,
+  clearPlugins as clearKernelPlugins,
+  clearProfiles,
+  clearServices,
+  clearTemplates,
+  getPlugin as getKernelPlugin,
+  getProfile,
+  getService,
+  getTemplate,
+  listCapabilities,
+  listPlugins as listKernelPlugins,
+  listProfiles,
+  listServices,
+  listTemplates,
+  registerPlugin as registerKernelPlugin,
+  registerProfile,
+  registerService,
+  registerTemplate,
+  resolveCapability
+} from '../src/kernel/registries/index.js';
 import { findWorkspaceRoot, readWorkspaceManifest } from '../src/kernel/workspace.js';
 import { loadPlugins, getPlugin, listPlugins } from '../src/plugins/index.js';
 import { clearPlugins } from '../src/plugins/registry.js';
+import gitPlugin from '../src/plugins/git/index.js';
 
 test('init creates JZL and game project structure', async () => {
   const cwd = makeTempDir();
@@ -760,6 +782,59 @@ test('plugin registry loads git plugin metadata', () => {
   assert.equal(gitPlugin.manifest.version, '0.1.0');
   assert.deepEqual(gitPlugin.manifest.commands, ['git status', 'git link-task', 'git current']);
   assert.equal(listPlugins()[0].manifest.name, 'git');
+});
+
+test('kernel services registry registers and lists services', () => {
+  clearServices();
+  const service = { run: () => 'ok' };
+
+  registerService('workspace', service);
+
+  assert.equal(getService('workspace'), service);
+  assert.deepEqual(listServices(), [{ name: 'workspace', service }]);
+});
+
+test('kernel plugins registry registers git plugin and capabilities', () => {
+  clearKernelPlugins();
+  clearCapabilities();
+
+  registerKernelPlugin(gitPlugin);
+
+  assert.equal(getKernelPlugin('git').manifest.name, 'git');
+  assert.equal(listKernelPlugins()[0].manifest.name, 'git');
+  assert.equal(resolveCapability('version-control').name, 'git');
+  assert.equal(listCapabilities().some((item) => item.name === 'version-control'), true);
+});
+
+test('kernel capabilities registry resolves version-control to git', () => {
+  clearKernelPlugins();
+  clearCapabilities();
+
+  registerKernelPlugin(gitPlugin);
+  const provider = resolveCapability('version-control');
+
+  assert.equal(provider.name, 'git');
+  assert.equal(provider.plugin.manifest.name, 'git');
+});
+
+test('kernel templates registry registers and lists templates', () => {
+  clearTemplates();
+  const template = { name: 'game', agents: ['programador'] };
+
+  registerTemplate('game', template);
+
+  assert.equal(getTemplate('game'), template);
+  assert.deepEqual(listTemplates(), [{ name: 'game', template }]);
+});
+
+test('kernel profiles registry registers and lists profiles', () => {
+  clearProfiles();
+  const profile = { name: 'solo', policies: [] };
+
+  registerProfile('solo', profile);
+
+  assert.equal(getProfile('solo'), profile);
+  assert.deepEqual(listProfiles(), [{ name: 'solo', profile }]);
 });
 
 function makeTempDir() {

@@ -10,8 +10,8 @@
     "git.link-task"
   ],
   "capabilities": [
+    "version-control",
     "read-git-status",
     "link-task-commit"
   ]
 }
-

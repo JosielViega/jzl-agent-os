@@ -79,6 +79,8 @@ Registries planejados:
 - Templates Registry
 - Profiles Registry
 
+A implementacao inicial vive em `src/kernel/registries` e usa memoria local do processo. Ela ainda nao altera comportamento da CLI.
+
 ## Lifecycle
 
 Entidades centrais devem ter lifecycle explicito quando isso impactar decisao operacional.
