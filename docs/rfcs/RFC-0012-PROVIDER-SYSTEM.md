@@ -118,11 +118,17 @@ O plugin Git registra `git-provider`, que oferece `version-control`.
 
 O Capability Resolver passa a resolver `version-control` para `git-provider`, mantendo fallback temporario para a resolucao antiga quando necessario.
 
+Os comandos `jzl git status`, `jzl git link-task` e `jzl git current` usam `requireCapability("version-control")` e chamam os services do provider:
+
+- `status()`
+- `lastCommit()`
+- `currentBranch()`
+- `linkTask()`
+
 ## Fora De Escopo
 
-Este RFC nao move comandos Git.
+Este RFC nao remove comandos Git.
 
 Este RFC nao adiciona comandos.
 
 Este RFC nao altera saida da CLI.
-

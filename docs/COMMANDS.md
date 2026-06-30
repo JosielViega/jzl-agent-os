@@ -77,3 +77,5 @@ jzl git current
 ```
 
 Esses comandos apenas leem Git e registram informacoes no estado JZL. Eles nao criam commits e nao fazem push.
+
+Internamente, os comandos Git usam a capability `version-control`, resolvida para `git-provider`. A interface de CLI permanece a mesma.

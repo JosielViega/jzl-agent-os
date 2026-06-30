@@ -862,6 +862,10 @@ test('capability resolver resolves version-control after loading plugins', () =>
   assert.equal(hasCapability('version-control'), true);
   assert.equal(getCapabilityProvider('version-control').name, 'git-provider');
   assert.equal(getCapabilityProvider('version-control').plugin.manifest.name, 'git');
+  assert.equal(typeof getCapabilityProvider('version-control').services.status, 'function');
+  assert.equal(typeof getCapabilityProvider('version-control').services.lastCommit, 'function');
+  assert.equal(typeof getCapabilityProvider('version-control').services.currentBranch, 'function');
+  assert.equal(typeof getCapabilityProvider('version-control').services.linkTask, 'function');
   assert.equal(requireCapability('version-control').name, 'git-provider');
   assert.equal(listAvailableCapabilities().some((item) => item.name === 'version-control'), true);
 });

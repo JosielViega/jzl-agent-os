@@ -19,6 +19,7 @@
 - Conectado Plugin System ao Registry System para registrar plugins e capabilities durante `loadPlugins()`.
 - Implementado Capability Resolver minimo sobre o Capabilities Registry.
 - Implementado Provider System minimo entre Capability e Plugin.
+- Migrados comandos `jzl git` para usar `version-control` via `git-provider`, mantendo saida compativel.
 - Atualizado roadmap com secao v0.2.
 - Adicionada nota no README sobre arquitetura via RFCs.
 
