@@ -15,6 +15,18 @@
 
 Status: entregue em `v0.1.0`.
 
+## v0.2: Arquitetura Antes De Codigo
+
+Antes de adicionar novas funcionalidades, a v0.2 deve consolidar a arquitetura por RFCs.
+
+- Kernel API para centralizar regras e acesso a `.jzl`.
+- Plugin System para remover integracoes especificas do nucleo.
+- Template System para substituir inicializacao fixa por templates declarativos.
+- Event Bus para separar publicacao de eventos e reacoes.
+- Dogfooding para desenvolver o JZL usando o proprio JZL.
+
+Status: em planejamento via `docs/rfcs/`.
+
 ## Fase 2: Project Awareness
 
 - Leitura declarativa da estrutura do projeto.

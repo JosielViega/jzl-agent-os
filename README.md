@@ -95,6 +95,12 @@ jzl next-step
 
 O Diretor cria tasks, o Programador assume tasks, setores resolvem dependencias, e o Revisor/Testador/Documentador recebem handoffs conforme necessario.
 
+## v0.2
+
+A v0.2 esta em fase de arquitetura via RFCs. O objetivo e planejar Kernel API, Plugin System, Template System, Event Bus e dogfooding antes de implementar novos comandos funcionais.
+
+Os RFCs vivem em `docs/rfcs/`.
+
 ## Exemplo Completo: Game
 
 ```sh

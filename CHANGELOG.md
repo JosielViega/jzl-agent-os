@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Documentacao
+
+- Iniciado planejamento da v0.2 por RFCs.
+- Criados RFCs para Kernel API, Plugin System, Template System, Event Bus e Dogfooding.
+- Atualizado roadmap com secao v0.2.
+- Adicionada nota no README sobre arquitetura via RFCs.
+
 ## v0.1.0
 
 Release conceitual inicial do JZL Agent OS.
