@@ -12,9 +12,25 @@ Nucleo do JZL. Conhece apenas conceitos genericos e protege invariantes do siste
 
 Ambiente operacional em que comandos, agents, estado local, eventos e plugins interagem.
 
+## Constitution
+
+Documento superior que governa decisoes futuras do JZL Agent OS.
+
 ## Workspace
 
-Diretorio de trabalho do projeto onde o JZL foi inicializado.
+Unidade maxima do JZL. Representa o ambiente operacional onde Kernel, Runtime, Agents, Plugins, Events, Profiles, Policies e Projects coexistem. O futuro manifesto do Workspace sera `jzl.workspace.json`.
+
+## Project
+
+Entidade logica dentro de um Workspace. Um Workspace pode conter varios Projects.
+
+## Domain
+
+Area funcional dentro de um Workspace, como gameplay, backend, launcher, website, admin ou billing. Um Domain pode conter Projects.
+
+## Role
+
+Nome de argumento mantido nos comandos atuais por compatibilidade. O conceito arquitetural equivalente e Agent.
 
 ## Plugin
 
@@ -31,6 +47,10 @@ Pacote que define agents, contracts, policies, workflows e plugins recomendados 
 ## Profile
 
 Configuracao operacional que ajusta comportamento, defaults ou preferencias para um contexto.
+
+## Registry
+
+Componente de descoberta que registra services, plugins, capabilities, templates ou profiles sem acoplamento direto entre partes do sistema.
 
 ## Contract
 
@@ -83,4 +103,3 @@ Checagem antes de concluir uma task.
 ## Guard
 
 Checagem de uma acao pretendida contra o contrato do agent.
-

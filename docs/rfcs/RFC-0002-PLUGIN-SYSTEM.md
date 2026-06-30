@@ -9,7 +9,7 @@ Plugins permitem expandir o JZL Agent OS sem acoplar o Kernel a ferramentas espe
 
 ## O Que E Um Plugin
 
-Um plugin e um pacote local que registra comandos, subscribers de eventos e capabilities. Ele pode ler informacoes externas e registrar estado no JZL por meio do Kernel API.
+Um plugin e um pacote local que registra comandos, subscribers de eventos e capabilities. Ele pode ler informacoes externas e registrar estado no JZL por meio de Kernel Services.
 
 Plugins nao devem editar `.jzl` diretamente.
 
@@ -50,7 +50,7 @@ O plugin Git poderia oferecer:
 - `jzl git link-task`
 - `jzl git current`
 
-Ele leria o repositorio Git local, mas nao faria commit, push ou alteracao automatica. Ao vincular uma task a um commit, chamaria o Kernel API para atualizar a task, adicionar journal e publicar `git.taskLinked`.
+Ele leria o repositorio Git local, mas nao faria commit, push ou alteracao automatica. Ao vincular uma task a um commit, chamaria Kernel Services para atualizar a task, adicionar journal e publicar `git.taskLinked`.
 
 ## Limites
 

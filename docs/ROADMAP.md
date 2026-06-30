@@ -19,19 +19,24 @@ Status: entregue em `v0.1.0`.
 
 Antes de adicionar novas funcionalidades, a v0.2 deve consolidar a arquitetura por RFCs.
 
-- Kernel API para centralizar regras e acesso a `.jzl`.
+- Constituicao para governar decisoes futuras.
+- Kernel Services para centralizar regras e acesso a `.jzl`.
 - Plugin System para remover integracoes especificas do nucleo.
 - Template System para substituir inicializacao fixa por templates declarativos.
 - Event Bus para separar publicacao de eventos e reacoes.
 - Dogfooding para desenvolver o JZL usando o proprio JZL.
 - Capability System para desacoplar Kernel de ferramentas especificas.
 - ADRs para registrar decisoes arquiteturais aceitas.
+- Workspace Manifest para definir a unidade maxima do JZL.
+- Registry System para descoberta sem acoplamento.
+- Lifecycle Model para estados explicitos.
+- Domain Model para workspaces com multiplas areas funcionais.
 
 Status: em planejamento via `docs/rfcs/`.
 
 ## Fase 2: Project Awareness
 
-- Leitura declarativa da estrutura do projeto.
+- Leitura declarativa da estrutura do workspace.
 - Registro de stack, scripts, portas e comandos de verificacao.
 - Mapa de areas do codigo.
 - Associacao entre tasks e arquivos impactados.

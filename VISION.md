@@ -2,7 +2,7 @@
 
 ## O Que E O JZL Agent OS
 
-JZL Agent OS e uma CLI local, sem IA interna, para coordenar equipes de agentes de IA dentro de um workspace de projeto.
+JZL Agent OS e um sistema operacional local, exposto por uma CLI sem IA interna, para coordenar equipes de agentes de IA dentro de um workspace.
 
 Ele organiza agentes, contratos, tasks, mensagens, dependencias, journal, eventos e checagens operacionais em arquivos locais. O JZL nao tenta pensar pelo agente. Ele cria um protocolo para que agentes trabalhem com mais continuidade, limite e previsibilidade.
 
@@ -59,7 +59,7 @@ O estado fica em `.jzl`, mas agents nao devem editar `.jzl` manualmente. Eles de
 
 ## Missao
 
-O objetivo do JZL Agent OS não é tornar agentes mais inteligentes. É tornar equipes de agentes mais organizadas, previsíveis e colaborativas.
+O objetivo do JZL Agent OS nao e tornar agentes mais inteligentes. E tornar equipes de agentes mais organizadas, previsiveis e colaborativas.
 
 ## Visao Para v1.0
 
@@ -69,10 +69,13 @@ Direcoes esperadas:
 
 - Kernel pequeno e estavel.
 - Runtime claro para agents.
+- Workspace como unidade maxima.
+- Domains para areas funcionais.
 - Templates por tipo de projeto.
 - Plugins externos por capability.
+- Registries para descoberta sem acoplamento.
 - Event Bus com rastreabilidade forte.
 - Policies configuraveis.
+- Lifecycle explicito para entidades centrais.
 - Documentacao tratada como parte do produto.
 - Dogfooding: o JZL desenvolvido usando o proprio JZL.
-

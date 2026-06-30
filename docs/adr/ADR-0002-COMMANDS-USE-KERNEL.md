@@ -8,7 +8,7 @@ Na v0.1, comandos CLI manipulavam partes da estrutura `.jzl` diretamente. Isso f
 
 ## Decisao
 
-Comandos CLI nao devem manipular diretamente a estrutura `.jzl`. Devem usar Kernel API.
+Comandos CLI nao devem manipular diretamente a estrutura `.jzl`. Devem usar Kernel Services por meio da Kernel API tecnica.
 
 ## Consequencias
 
@@ -22,4 +22,3 @@ Comandos CLI nao devem manipular diretamente a estrutura `.jzl`. Devem usar Kern
 - Criar helpers soltos sem fronteira clara.
 
 Essas alternativas foram rejeitadas porque dificultam testes e evolucao para plugins/templates.
-

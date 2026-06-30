@@ -19,7 +19,7 @@ Esse template deve criar agents orientados ao nucleo do sistema.
 
 ## Agents Sugeridos
 
-- `kernel-architect`: define fronteiras do Kernel API e invariantes.
+- `kernel-architect`: define fronteiras dos Kernel Services e invariantes.
 - `plugin-architect`: define contratos de plugins e capabilities.
 - `cli-engineer`: implementa comandos e saidas de CLI.
 - `storage-engineer`: cuida de arquivos, migracoes e compatibilidade.
@@ -49,5 +49,4 @@ Esse template deve criar agents orientados ao nucleo do sistema.
 
 ## Resultado Esperado
 
-Dogfooding deve revelar lacunas no Kernel API, nos templates, nas policies e nas saidas da CLI antes que a v0.2 seja implementada.
-
+Dogfooding deve revelar lacunas nos Kernel Services, nos templates, nas policies e nas saidas da CLI antes que a v0.2 seja implementada.

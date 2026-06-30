@@ -7,7 +7,7 @@ Target: v0.2
 
 O Kernel e a camada central do JZL Agent OS. Ele deve concentrar as regras de dominio, leitura e escrita do estado `.jzl`, validacoes de contrato e publicacao de eventos.
 
-Na v0.1, varios comandos CLI conhecem detalhes de armazenamento. Na v0.2, os comandos devem ser adaptadores finos: recebem argumentos, chamam o Kernel API e formatam a saida.
+Na v0.1, varios comandos CLI conhecem detalhes de armazenamento. Na v0.2, os comandos devem ser adaptadores finos: recebem argumentos, chamam Kernel Services por meio da Kernel API tecnica e formatam a saida.
 
 ## Entidades Principais
 
@@ -21,7 +21,7 @@ Unidade operacional persistente. Possui contrato, sessao, inbox, outbox e journa
 
 ### Session
 
-Estado ativo de um agent ou da CLI local. Define role atual e task atual.
+Estado ativo de um agent ou da CLI local. Define agent atual, ainda chamado de role nos argumentos atuais, e task atual.
 
 ### Task
 
@@ -78,13 +78,13 @@ loadTemplate(input)
 ## Responsabilidades Da CLI
 
 - Parsear argumentos.
-- Chamar funcoes do Kernel API.
+- Chamar Kernel Services por meio da Kernel API tecnica.
 - Mostrar saida curta e objetiva.
 - Nao manipular `.jzl` diretamente.
 
 ## Regra
 
-Comandos CLI nao devem manipular `.jzl` diretamente. Todo comando funcional deve usar o Kernel API.
+Comandos CLI nao devem manipular `.jzl` diretamente. Todo comando funcional deve usar Kernel Services por meio da Kernel API tecnica.
 
 ## Implementacao Inicial
 

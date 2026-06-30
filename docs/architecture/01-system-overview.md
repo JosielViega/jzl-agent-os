@@ -1,6 +1,6 @@
 # 01: System Overview
 
-JZL Agent OS e uma CLI local para coordenar agents em um workspace.
+JZL Agent OS e um sistema operacional local, exposto por CLI, para coordenar agents em um workspace.
 
 O sistema tem quatro camadas conceituais:
 
@@ -21,4 +21,3 @@ Dar aos agents uma forma comum de responder:
 - o que esta bloqueado;
 - para quem devo enviar o trabalho;
 - o que ja aconteceu.
-

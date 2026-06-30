@@ -2,6 +2,12 @@
 
 JZL Agent OS e um kernel local baseado em arquivos. Ele nao usa banco de dados, servidor, IA interna ou API externa.
 
+## Constituicao
+
+A arquitetura do JZL e governada por `CONSTITUTION.md`.
+
+RFCs propoem mudancas. ADRs registram decisoes aceitas. A Constituicao define os limites superiores: Kernel pequeno, tecnologias externas como plugins, capabilities antes de ferramentas, Workspace como unidade maxima, eventos para rastreabilidade e compatibilidade explicita.
+
 ## Estrutura `.jzl`
 
 ```txt
@@ -52,6 +58,38 @@ O Kernel e a fronteira sagrada do JZL. Ele deve conhecer apenas conceitos generi
 - Contract
 
 Tecnologias especificas devem viver fora do Kernel, por plugins e capabilities.
+
+## Workspace
+
+Workspace e a unidade maxima do JZL. Todo estado operacional pertence a um Workspace.
+
+O manifesto futuro `jzl.workspace.json` identifica o Workspace. A pasta `.jzl` guarda estado operacional interno.
+
+Um Workspace pode conter Domains e Projects.
+
+## Registries
+
+Registries permitem descoberta sem acoplamento direto.
+
+Registries planejados:
+
+- Services Registry
+- Plugins Registry
+- Capabilities Registry
+- Templates Registry
+- Profiles Registry
+
+## Lifecycle
+
+Entidades centrais devem ter lifecycle explicito quando isso impactar decisao operacional.
+
+Workspaces, Agents, Plugins, Capabilities e Tasks podem evoluir por estados documentados em RFC.
+
+## Domains
+
+Domain representa uma area funcional dentro de um Workspace, como gameplay, backend, website, admin ou billing.
+
+Project e uma implementacao concreta dentro de um Domain.
 
 ## Tres Leis Do Kernel
 

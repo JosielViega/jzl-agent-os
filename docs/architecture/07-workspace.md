@@ -1,12 +1,35 @@
 # 07: Workspace
 
-Workspace e o diretorio onde o JZL foi inicializado.
+Workspace e a unidade maxima do JZL.
 
-Ele contem o projeto real e a pasta `.jzl` com o estado operacional.
+Ele representa o ambiente operacional onde Kernel, Runtime, Agents, Plugins, Events, Profiles, Policies e Projects coexistem.
+
+Um Workspace pode conter varios projetos. Ele nao e apenas `.jzl` e nao e necessariamente um repositorio Git.
+
+## Manifesto Futuro
+
+O manifesto proposto para v0.2 e:
+
+```txt
+jzl.workspace.json
+```
+
+Campos minimos:
+
+- `workspaceId`
+- `name`
+- `kernelVersion`
+- `template`
+- `profile`
+- `createdAt`
+- `manifestVersion`
+
+O manifesto identifica o Workspace. A pasta `.jzl` continua guardando estado operacional interno.
 
 ## Estrutura
 
 ```txt
+jzl.workspace.json
 .jzl/
   project.md
   type.json
@@ -22,5 +45,6 @@ Ele contem o projeto real e a pasta `.jzl` com o estado operacional.
 
 Agents nao editam `.jzl` manualmente. Eles usam comandos JZL.
 
-Arquivos do projeto fora de `.jzl` pertencem ao trabalho normal da task. Arquivos dentro de `.jzl` pertencem ao runtime operacional.
+Arquivos de projects dentro do Workspace pertencem ao trabalho normal da task. Arquivos dentro de `.jzl` pertencem ao runtime operacional.
 
+Componentes devem localizar o Workspace procurando `jzl.workspace.json` e, durante a transicao, usar `.jzl` como fallback de compatibilidade.

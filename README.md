@@ -1,12 +1,13 @@
 # JZL Agent OS
 
-JZL Agent OS e uma CLI local, sem IA interna, para coordenar agentes de IA dentro de um projeto. Ele funciona como um pequeno sistema operacional de agentes: guarda estado em arquivos, define contratos, organiza inbox/outbox, controla tasks, dependencias, journal e verificacoes antes de conclusao.
+JZL Agent OS e um sistema operacional local para coordenar agentes de IA dentro de um workspace. Ele e exposto hoje por uma CLI sem IA interna: guarda estado em arquivos, define contratos, organiza inbox/outbox, controla tasks, dependencias, journal e verificacoes antes de conclusao.
 
 JZL nao substitui o Codex. O Codex continua pensando, lendo codigo e implementando. O JZL fornece o protocolo operacional para que varios chats/agentes saibam quem sao, o que podem fazer, qual task esta ativa, quais dependencias bloqueiam o trabalho e qual deve ser o proximo passo.
 
 ## Documentos Centrais
 
 - [VISION.md](VISION.md): visao, missao e direcao para v1.0.
+- [CONSTITUTION.md](CONSTITUTION.md): regras superiores para decisoes futuras.
 - [docs/architecture/](docs/architecture/): arquitetura conceitual da v0.2.
 - [docs/GLOSSARY.md](docs/GLOSSARY.md): termos do sistema.
 - [docs/NAMING.md](docs/NAMING.md): padroes de nomenclatura.
@@ -82,8 +83,8 @@ O journal registra continuidade. Quando ha task atual, `jzl journal add` vincula
 
 - dependencies pending da task atual;
 - mensagens unread relacionadas a task;
-- contrato da role atual;
-- checklist da role;
+- contrato do agent atual;
+- checklist do agent atual;
 - journal da task atual.
 
 ## Fluxo Com Codex
@@ -105,15 +106,17 @@ O Diretor cria tasks, o Programador assume tasks, setores resolvem dependencias,
 
 ## v0.2
 
-A v0.2 esta em fase de arquitetura via RFCs. O objetivo e planejar Kernel API, Plugin System, Template System, Event Bus, Capability System, ADRs e dogfooding antes de implementar novos comandos funcionais.
+A v0.2 esta em fase de arquitetura via RFCs. O objetivo e planejar Kernel Services, Plugin System, Template System, Event Bus, Capability System, ADRs e dogfooding antes de implementar novos comandos funcionais.
 
-Os RFCs vivem em `docs/rfcs/`. Decisoes aceitas vivem em `docs/adr/`.
+Os RFCs vivem em `docs/rfcs/`. Decisoes aceitas vivem em `docs/adr/`. A Constituicao vive em `CONSTITUTION.md` e governa decisoes futuras.
 
 Tres leis do Kernel:
 
 - Lei 1: Nenhuma funcionalidade nasce sem RFC.
 - Lei 2: Nenhuma RFC nasce sem problema real.
 - Lei 3: Kernel e sagrado.
+
+RFCs estruturais da v0.2 tambem definem Workspace Manifest, Registry System, Lifecycle Model e Domain Model.
 
 ## Exemplo Completo: Game
 
@@ -144,6 +147,8 @@ jzl task complete --summary "Movimento horizontal implementado com aceleracao."
 ```
 
 ## Comandos
+
+Os comandos ainda usam `--role` por compatibilidade, mas a documentacao nova usa Agent como conceito principal.
 
 ```sh
 jzl init --type game
@@ -222,7 +227,7 @@ O JZL nao cria commits automaticamente e nao faz push.
 `jzl status` mostra uma visao curta do estado operacional:
 
 - tipo do projeto;
-- sessao/role atual;
+- sessao e agent atual;
 - task atual;
 - mensagens unread;
 - dependencies pending da task atual;

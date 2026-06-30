@@ -10,6 +10,8 @@ Cria `.jzl`, agents, contracts, setores e estrutura base do projeto.
 
 ## Sessao E Boot
 
+Os comandos atuais usam `--role` por compatibilidade. Em documentacao de arquitetura, o conceito equivalente e Agent.
+
 ```sh
 jzl boot --role <role>
 jzl session start <role>

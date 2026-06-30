@@ -4,11 +4,16 @@
 
 ### Documentacao
 
+- Criada a Constituicao do JZL Agent OS.
+- Criado RFC-0000 para explicar a Constituicao.
 - Iniciado planejamento da v0.2 por RFCs.
 - Criados RFCs para Kernel API, Plugin System, Template System, Event Bus e Dogfooding.
 - Criados RFCs para Capability System e Architecture Decision Records.
 - Criados ADRs iniciais sobre Kernel, comandos, agents e capabilities.
 - Iniciada Sprint 0 da v0.2 com VISION, glossario, naming, design e documentacao de arquitetura.
+- Revisada a documentacao da Sprint 0 para alinhar Agent, Workspace, Kernel Services, RFCs e ADRs.
+- Criado RFC-0008 para Workspace Manifest e conceito formal de Workspace.
+- Criados RFCs para Registry System, Lifecycle Model e Domain Model.
 - Atualizado roadmap com secao v0.2.
 - Adicionada nota no README sobre arquitetura via RFCs.
 
