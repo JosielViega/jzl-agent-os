@@ -6,6 +6,8 @@
 
 - Iniciado planejamento da v0.2 por RFCs.
 - Criados RFCs para Kernel API, Plugin System, Template System, Event Bus e Dogfooding.
+- Criados RFCs para Capability System e Architecture Decision Records.
+- Criados ADRs iniciais sobre Kernel, comandos, agents e capabilities.
 - Atualizado roadmap com secao v0.2.
 - Adicionada nota no README sobre arquitetura via RFCs.
 

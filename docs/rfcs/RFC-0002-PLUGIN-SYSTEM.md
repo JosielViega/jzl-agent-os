@@ -1,6 +1,6 @@
 # RFC-0002: Plugin System
 
-Status: draft  
+Status: draft, registry minimo iniciado  
 Target: v0.2
 
 ## Objetivo
@@ -63,3 +63,23 @@ Ele leria o repositorio Git local, mas nao faria commit, push ou alteracao autom
 
 Kernel nao deve conhecer Git, Docker, Godot, Unity, Laravel, React ou qualquer stack especifica. O Kernel conhece entidades JZL; plugins conhecem ferramentas externas.
 
+## Implementacao Minima
+
+A primeira infraestrutura de plugins vive em `src/plugins`.
+
+Arquivos iniciais:
+
+- `src/plugins/index.js`
+- `src/plugins/registry.js`
+- `src/plugins/git/manifest.json`
+- `src/plugins/git/index.js`
+
+Funcoes iniciais:
+
+- `loadPlugins()`: carrega plugins internos conhecidos.
+- `getPlugin(name)`: retorna plugin registrado pelo nome.
+- `listPlugins()`: lista plugins registrados.
+
+O plugin `git` registra apenas metadados nesta etapa. Os comandos `jzl git status`, `jzl git link-task` e `jzl git current` continuam no local atual e nao foram movidos.
+
+Esta etapa nao adiciona comandos novos e nao altera a saida da CLI.

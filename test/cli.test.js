@@ -6,6 +6,8 @@ import path from 'node:path';
 import { test } from 'node:test';
 import { run } from '../src/cli.js';
 import { publish, readLog, subscribe } from '../src/kernel/eventBus.js';
+import { loadPlugins, getPlugin, listPlugins } from '../src/plugins/index.js';
+import { clearPlugins } from '../src/plugins/registry.js';
 
 test('init creates JZL and game project structure', async () => {
   const cwd = makeTempDir();
@@ -701,6 +703,18 @@ test('event bus publishes to events log and notifies subscribers', async () => {
   assert.equal(seen.role, 'programador');
   assert.equal(logged.type, type);
   assert.equal(logged.role, 'programador');
+});
+
+test('plugin registry loads git plugin metadata', () => {
+  clearPlugins();
+  const plugins = loadPlugins();
+  const gitPlugin = getPlugin('git');
+
+  assert.equal(plugins.length, 1);
+  assert.equal(gitPlugin.manifest.name, 'git');
+  assert.equal(gitPlugin.manifest.version, '0.1.0');
+  assert.deepEqual(gitPlugin.manifest.commands, ['git status', 'git link-task', 'git current']);
+  assert.equal(listPlugins()[0].manifest.name, 'git');
 });
 
 function makeTempDir() {

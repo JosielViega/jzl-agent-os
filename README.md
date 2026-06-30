@@ -97,9 +97,15 @@ O Diretor cria tasks, o Programador assume tasks, setores resolvem dependencias,
 
 ## v0.2
 
-A v0.2 esta em fase de arquitetura via RFCs. O objetivo e planejar Kernel API, Plugin System, Template System, Event Bus e dogfooding antes de implementar novos comandos funcionais.
+A v0.2 esta em fase de arquitetura via RFCs. O objetivo e planejar Kernel API, Plugin System, Template System, Event Bus, Capability System, ADRs e dogfooding antes de implementar novos comandos funcionais.
 
-Os RFCs vivem em `docs/rfcs/`.
+Os RFCs vivem em `docs/rfcs/`. Decisoes aceitas vivem em `docs/adr/`.
+
+Tres leis do Kernel:
+
+- Lei 1: Nenhuma funcionalidade nasce sem RFC.
+- Lei 2: Nenhuma RFC nasce sem problema real.
+- Lei 3: Kernel e sagrado.
 
 ## Exemplo Completo: Game
 

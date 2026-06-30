@@ -1,5 +1,13 @@
 # Principles
 
+## Tres Leis Do Kernel
+
+Lei 1: Nenhuma funcionalidade nasce sem RFC.
+
+Lei 2: Nenhuma RFC nasce sem problema real.
+
+Lei 3: Kernel e sagrado.
+
 ## Comandos Sobre Edicao Manual
 
 Agentes devem usar comandos `jzl` para alterar estado. Edicao manual de `.jzl` quebra garantias do kernel.
@@ -27,3 +35,7 @@ O journal existe para que outro chat consiga entender o que aconteceu e continua
 ## Sem IA Interna No Nucleo
 
 O JZL deve continuar previsivel, local e deterministico. A IA vive nos agentes que usam o JZL, nao dentro do kernel.
+
+## Capabilities Sobre Ferramentas
+
+O sistema deve depender de capabilities, nao de nomes fixos de ferramentas. Git, Docker, Godot e NPM sao implementacoes; `version-control`, `container-runtime`, `game-engine` e `package-manager` sao capacidades.

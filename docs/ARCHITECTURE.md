@@ -37,6 +37,30 @@ JZL Agent OS e um kernel local baseado em arquivos. Ele nao usa banco de dados, 
 - `policies/`: reservado para regras futuras.
 - `workflows/`: reservado para fluxos futuros.
 
+## Kernel
+
+O Kernel e a fronteira sagrada do JZL. Ele deve conhecer apenas conceitos genericos:
+
+- Agent
+- Task
+- Message
+- Dependency
+- Journal
+- Event
+- Session
+- Project
+- Contract
+
+Tecnologias especificas devem viver fora do Kernel, por plugins e capabilities.
+
+## Tres Leis Do Kernel
+
+Lei 1: Nenhuma funcionalidade nasce sem RFC.
+
+Lei 2: Nenhuma RFC nasce sem problema real.
+
+Lei 3: Kernel e sagrado.
+
 ## Modelo De Execucao
 
 O usuario e o Codex interagem apenas por comandos `jzl`. Os comandos leem e escrevem arquivos dentro de `.jzl`, mantendo o estado auditavel e portavel.

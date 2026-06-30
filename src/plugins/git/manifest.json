@@ -1,0 +1,17 @@
+{
+  "name": "git",
+  "version": "0.1.0",
+  "commands": [
+    "git status",
+    "git link-task",
+    "git current"
+  ],
+  "events": [
+    "git.link-task"
+  ],
+  "capabilities": [
+    "read-git-status",
+    "link-task-commit"
+  ]
+}
+

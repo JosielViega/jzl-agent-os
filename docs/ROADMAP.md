@@ -24,6 +24,8 @@ Antes de adicionar novas funcionalidades, a v0.2 deve consolidar a arquitetura p
 - Template System para substituir inicializacao fixa por templates declarativos.
 - Event Bus para separar publicacao de eventos e reacoes.
 - Dogfooding para desenvolver o JZL usando o proprio JZL.
+- Capability System para desacoplar Kernel de ferramentas especificas.
+- ADRs para registrar decisoes arquiteturais aceitas.
 
 Status: em planejamento via `docs/rfcs/`.
 
