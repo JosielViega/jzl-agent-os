@@ -6,6 +6,7 @@ import path from 'node:path';
 import { test } from 'node:test';
 import { run } from '../src/cli.js';
 import { publish, readLog, subscribe } from '../src/kernel/eventBus.js';
+import { findWorkspaceRoot, readWorkspaceManifest } from '../src/kernel/workspace.js';
 import { loadPlugins, getPlugin, listPlugins } from '../src/plugins/index.js';
 import { clearPlugins } from '../src/plugins/registry.js';
 
@@ -15,6 +16,7 @@ test('init creates JZL and game project structure', async () => {
 
   await run(['init', '--type', 'game'], { cwd, io: output.io });
 
+  assert.equal(fs.existsSync(path.join(cwd, 'jzl.workspace.json')), true);
   assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'project.md')), true);
   assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'type.json')), true);
   assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'events.log')), true);
@@ -34,6 +36,33 @@ test('init creates JZL and game project structure', async () => {
   assert.equal(fs.existsSync(path.join(cwd, 'docs')), true);
   assert.equal(fs.existsSync(path.join(cwd, 'README.md')), true);
   assert.match(output.text(), /JZL inicializado/);
+});
+
+test('init creates workspace manifest with minimum fields', async () => {
+  const cwd = makeTempDir();
+  const output = capture();
+
+  await run(['init', '--type', 'game'], { cwd, io: output.io });
+  const manifest = readWorkspaceManifest(cwd);
+
+  assert.match(manifest.workspaceId, /^workspace-[0-9a-f-]{36}$/);
+  assert.equal(manifest.name, path.basename(cwd));
+  assert.equal(manifest.kernelVersion, '0.1.0');
+  assert.equal(manifest.template, 'game');
+  assert.equal(manifest.profile, 'solo');
+  assert.match(manifest.createdAt, /^\d{4}-\d{2}-\d{2}T/);
+  assert.equal(manifest.manifestVersion, 1);
+});
+
+test('findWorkspaceRoot finds root by workspace manifest', async () => {
+  const cwd = makeTempDir();
+  const output = capture();
+  const nested = path.join(cwd, 'src', 'nested');
+
+  await run(['init', '--type', 'game'], { cwd, io: output.io });
+  fs.mkdirSync(nested, { recursive: true });
+
+  assert.equal(findWorkspaceRoot(nested), cwd);
 });
 
 test('session start and resume show current role state', async () => {
@@ -651,6 +680,7 @@ test('status shows no session and non initialized git', async () => {
   output.clear();
   await run(['status'], { cwd, io: output.io });
 
+  assert.match(output.text(), new RegExp(`workspace: ${path.basename(cwd)}`));
   assert.match(output.text(), /tipo: game/);
   assert.match(output.text(), /sessao: nenhuma/);
   assert.match(output.text(), /task atual: nenhuma/);
@@ -658,6 +688,20 @@ test('status shows no session and non initialized git', async () => {
   assert.match(output.text(), /dependencies pending da task: 0/);
   assert.match(output.text(), /ultimo evento: nenhum/);
   assert.match(output.text(), /git: nao inicializado/);
+});
+
+test('status falls back to legacy type when workspace manifest is missing', async () => {
+  const cwd = makeTempDir();
+  const output = capture();
+
+  await run(['init', '--type', 'game'], { cwd, io: output.io });
+  fs.unlinkSync(path.join(cwd, 'jzl.workspace.json'));
+  output.clear();
+  await run(['status'], { cwd, io: output.io });
+
+  assert.doesNotMatch(output.text(), /workspace:/);
+  assert.match(output.text(), /tipo: game/);
+  assert.match(output.text(), /sessao: nenhuma/);
 });
 
 test('status shows operational summary with task, unread, dependency, event, and git', async () => {
@@ -675,6 +719,7 @@ test('status shows operational summary with task, unread, dependency, event, and
   output.clear();
   await run(['status'], { cwd, io: output.io });
 
+  assert.match(output.text(), new RegExp(`workspace: ${path.basename(cwd)}`));
   assert.match(output.text(), /tipo: game/);
   assert.match(output.text(), /sessao: programador/);
   assert.match(output.text(), /task atual: task-.*Status task/);

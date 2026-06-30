@@ -6,3 +6,4 @@ export { addJournalEntry } from './journal.js';
 export { readInbox, sendMessage } from './messages.js';
 export { getCurrentSession, getProject } from './project.js';
 export { completeTask, createTask, takeTask } from './tasks.js';
+export { createWorkspaceManifest, findWorkspaceRoot, getWorkspaceInfo, readWorkspaceManifest } from './workspace.js';

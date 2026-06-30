@@ -13,7 +13,7 @@ Se o Kernel precisar conhecer nomes de ferramentas, ele deixa de ser generico. I
 
 O Kernel deve depender de capabilities, nao de plugins especificos.
 
-Capability e uma capacidade operacional declarada por um plugin. O Kernel e os agents podem pedir uma capacidade abstrata, e o Plugin Registry resolve qual plugin fornece essa capacidade.
+Capability e uma capacidade operacional declarada por um plugin. O Kernel e os agents podem pedir uma capacidade abstrata, e o Capabilities Registry resolve qual plugin fornece essa capacidade, consultando o Plugins Registry quando necessario.
 
 Exemplos:
 
@@ -55,17 +55,17 @@ Estrutura sugerida:
 }
 ```
 
-## Impacto No Plugin Registry
+## Impacto Nos Registries
 
-O Plugin Registry deve evoluir para:
+O Capabilities Registry deve evoluir para:
 
-- listar plugins por capability;
 - resolver capability para plugin disponivel;
 - detectar conflito quando varios plugins oferecem a mesma capability;
 - permitir templates recomendarem capabilities em vez de nomes fixos;
 - permitir policies exigirem capabilities minimas.
 
+O Plugins Registry continua responsavel por plugins descobertos, carregados, registrados e ativos. O Capabilities Registry consulta esses metadados para resolver providers.
+
 ## Regra
 
 O Kernel nao escolhe Git, Docker, Godot, Unity ou NPM. O Kernel pede capabilities. Plugins implementam capabilities.
-

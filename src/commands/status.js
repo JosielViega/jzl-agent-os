@@ -1,10 +1,10 @@
 import { listInbox, listPendingDependencies, readEvents } from '../agents.js';
-import { jzlPath, readJson } from '../fs-store.js';
+import { getWorkspaceInfo } from '../kernel/index.js';
 import { getCurrentTask, loadSession } from '../state.js';
 import { tryReadGitStatus } from './git.js';
 
 export function showStatus({ cwd, io }) {
-  const type = readJson(jzlPath(cwd, 'type.json'), { type: 'unknown' });
+  const workspace = getWorkspaceInfo(cwd);
   const session = loadSession(cwd);
   const role = session.currentRole || null;
   const task = role ? getCurrentTask(cwd, role) : null;
@@ -13,7 +13,8 @@ export function showStatus({ cwd, io }) {
   const [lastEvent] = readEvents(cwd, 1).slice(-1);
   const git = tryReadGitStatus(cwd);
 
-  io.log(`tipo: ${type.type || 'unknown'}`);
+  if (workspace.source === 'manifest') io.log(`workspace: ${workspace.name}`);
+  io.log(`tipo: ${workspace.template || 'unknown'}`);
   io.log(`sessao: ${role || 'nenhuma'}`);
   io.log(`task atual: ${task ? `${task.id} - ${task.title}` : 'nenhuma'}`);
   io.log(`mensagens unread: ${unread.length}`);

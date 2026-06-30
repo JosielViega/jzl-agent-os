@@ -17,5 +17,4 @@ Um agent pode precisar de controle de versao sem dizer Git. O workspace decide q
 
 ## Futuro
 
-O Plugin Registry deve resolver capabilities para plugins disponiveis e permitir que templates declarem capabilities recomendadas.
-
+O Capabilities Registry deve resolver capabilities para plugins disponiveis, consultando o Plugins Registry quando necessario, e permitir que templates declarem capabilities recomendadas.

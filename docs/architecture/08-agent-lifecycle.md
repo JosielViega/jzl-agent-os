@@ -6,6 +6,8 @@ Um agent passa por um ciclo operacional.
 
 O agent inicia com `jzl boot --role <agent>`.
 
+O argumento `--role` e mantido por compatibilidade com a CLI atual.
+
 O boot mostra contrato, permissoes, proibicoes, task atual, inbox, outbox, dependencias e comandos esperados.
 
 ## Trabalho
@@ -21,4 +23,3 @@ Preflight verifica dependencies, mensagens relacionadas, contrato, checklist e j
 ## Conclusao
 
 O agent conclui a task ou envia handoff para outro agent.
-

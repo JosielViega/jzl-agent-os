@@ -4,7 +4,7 @@ JZL Agent OS e um sistema operacional local, exposto por CLI, para coordenar age
 
 O sistema tem quatro camadas conceituais:
 
-- Workspace: diretorio onde o projeto vive.
+- Workspace: unidade maxima onde Kernel, Runtime, Agents, Plugins, Domains e Projects coexistem.
 - Kernel: regras e operacoes centrais.
 - Runtime: execucao local dos comandos e estado atual.
 - Extensoes: templates, plugins, capabilities e policies.

@@ -1,6 +1,6 @@
 # RFC-0008: Workspace Manifest
 
-Status: draft  
+Status: draft, implementacao inicial  
 Target: v0.2
 
 ## Objetivo
@@ -90,9 +90,9 @@ Campos minimos:
 {
   "workspaceId": "workspace-...",
   "name": "Meu Workspace",
-  "kernelVersion": "0.2.0",
+  "kernelVersion": "0.1.0",
   "template": "game",
-  "profile": "default",
+  "profile": "solo",
   "createdAt": "2026-06-30T00:00:00.000Z",
   "manifestVersion": 1
 }
@@ -167,7 +167,7 @@ O Workspace e a unidade maxima do JZL.
 - Events pertencem ao Workspace.
 - Policies pertencem ao Workspace.
 - Profiles pertencem ao Workspace.
-- Templates sao aplicados ao Workspace.
+- Templates sao aplicados ao Workspace ou a Domains dentro do Workspace.
 - Projects vivem dentro do Workspace.
 
 ## Regras
@@ -180,11 +180,23 @@ O Workspace e a unidade maxima do JZL.
 
 ## Fora De Escopo
 
-Este RFC nao implementa `jzl.workspace.json`.
-
-Este RFC nao altera `jzl init`.
-
 Este RFC nao define comandos novos.
 
 Este RFC nao muda a estrutura `.jzl` atual.
 
+## Implementacao Inicial
+
+A implementacao inicial cria `jzl.workspace.json` durante `jzl init --type game` sem remover `.jzl/type.json`.
+
+Kernel Service inicial:
+
+- `src/kernel/workspace.js`
+
+Funcoes iniciais:
+
+- `createWorkspaceManifest()`
+- `readWorkspaceManifest()`
+- `findWorkspaceRoot()`
+- `getWorkspaceInfo()`
+
+`jzl status` usa o manifesto quando existir e faz fallback para `.jzl/type.json` quando o manifesto nao existir.

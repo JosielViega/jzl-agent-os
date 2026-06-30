@@ -6,7 +6,7 @@
 jzl init --type game
 ```
 
-Cria `.jzl`, agents, contracts, setores e estrutura base do projeto.
+Cria `jzl.workspace.json`, `.jzl`, agents, contracts, setores e estrutura base do projeto.
 
 ## Sessao E Boot
 
@@ -20,7 +20,7 @@ jzl whoami
 jzl status
 ```
 
-`jzl status` mostra um resumo curto do tipo do projeto, sessao atual, task atual, mensagens unread, dependencies pending, ultimo evento e Git quando disponivel.
+`jzl status` mostra um resumo curto do workspace, tipo/template, sessao atual, task atual, mensagens unread, dependencies pending, ultimo evento e Git quando disponivel. Se `jzl.workspace.json` nao existir, usa `.jzl/type.json` como fallback.
 
 ## Inbox E Outbox
 

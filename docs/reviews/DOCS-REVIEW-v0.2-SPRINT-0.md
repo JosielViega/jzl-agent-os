@@ -51,7 +51,6 @@ Nao foram adicionados comandos. Nao houve alteracao funcional. Kernel nao foi al
 - Definir se os comandos futuros devem manter `--role` ou introduzir aliases com `--agent`.
 - Formalizar schema de Project vs Workspace.
 - Completar migracao gradual dos comandos para Kernel Services.
-- Evoluir Plugin Registry para resolver capabilities.
+- Evoluir Capabilities Registry para resolver capabilities consultando o Plugins Registry quando necessario.
 - Definir policy documental para acentos: manter ASCII por enquanto para consistencia dos arquivos atuais.
 - Criar ADR quando a nomenclatura `Agent` substituir totalmente `Role` na CLI, se isso acontecer.
-

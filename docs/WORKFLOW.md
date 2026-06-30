@@ -2,6 +2,8 @@
 
 ## Fluxo Principal
 
+Os comandos atuais usam `--role` por compatibilidade. O conceito arquitetural equivalente e Agent.
+
 1. Usuario inicializa o projeto:
 
 ```sh

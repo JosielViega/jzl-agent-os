@@ -5,8 +5,11 @@ A v0.2 prepara a base para evolucao sem pressa.
 Direcoes futuras:
 
 - Kernel Services mais completos.
-- Plugin Registry por capability.
+- Workspace Manifest.
+- Registry System com Services, Plugins, Capabilities, Templates e Profiles.
 - Template System declarativo.
+- Domain Model para workspaces com multiplas areas.
+- Lifecycle Model para entidades centrais.
 - Profiles por workspace.
 - Policies configuraveis.
 - Event Store mais estruturado.
@@ -18,4 +21,3 @@ Direcoes futuras:
 O JZL deve continuar local, deterministico e legivel.
 
 O sistema nao precisa tornar agentes mais inteligentes. Precisa tornar equipes de agentes mais organizadas.
-

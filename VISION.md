@@ -55,6 +55,8 @@ Depois disso, cada agente usa comandos JZL para descobrir seu estado:
 - `jzl dependency list`
 - `jzl preflight`
 
+O argumento `--role` permanece por compatibilidade com a CLI atual; o conceito arquitetural e Agent.
+
 O estado fica em `.jzl`, mas agents nao devem editar `.jzl` manualmente. Eles devem usar comandos.
 
 ## Missao

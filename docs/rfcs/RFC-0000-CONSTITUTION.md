@@ -28,7 +28,7 @@ Ela define principios permanentes:
 
 ## Relacao Com RFCs
 
-RFCs propõem mudancas.
+RFCs propoem mudancas.
 
 Toda RFC futura deve respeitar a Constituicao. Se uma proposta contrariar a Constituicao, a RFC deve declarar explicitamente o conflito e justificar por que a Constituicao deveria mudar.
 
@@ -58,4 +58,3 @@ Este RFC nao implementa codigo.
 Este RFC nao cria comandos.
 
 Este RFC nao altera o Kernel.
-

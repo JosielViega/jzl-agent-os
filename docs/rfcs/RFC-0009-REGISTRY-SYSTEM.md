@@ -53,7 +53,7 @@ Responsabilidades:
 - mapear capability para plugin;
 - resolver conflitos;
 - indicar capability nao atendida;
-- permitir que agents e templates pecam capacidades abstratas.
+- permitir que agents e templates solicitem capacidades abstratas.
 
 ### Templates Registry
 

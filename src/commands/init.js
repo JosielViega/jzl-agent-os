@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { ensureDir, jzlPath, writeJsonIfMissing, writeTextIfMissing } from '../fs-store.js';
 import { GAME_AGENTS, GAME_SECTORS, agentPath } from '../agents.js';
+import { createWorkspaceManifest } from '../kernel/index.js';
 
 const JZL_FOLDERS = [
   'roles',
@@ -21,6 +22,7 @@ export function initProject({ cwd, type, io }) {
   }
 
   ensureDir(jzlPath(cwd));
+  createWorkspaceManifest(cwd, { template: 'game', profile: 'solo' });
   for (const folder of JZL_FOLDERS) ensureDir(jzlPath(cwd, folder));
   ensureDir(jzlPath(cwd, 'agents'));
 

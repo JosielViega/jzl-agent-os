@@ -187,6 +187,7 @@ jzl next-step
 ## Estrutura
 
 ```txt
+jzl.workspace.json
 .jzl/
   project.md
   type.json
@@ -203,6 +204,8 @@ jzl next-step
   policies/
   workflows/
 ```
+
+`jzl.workspace.json` identifica o Workspace. `.jzl/type.json` continua existindo por compatibilidade.
 
 ## Desenvolvimento
 
@@ -226,6 +229,7 @@ O JZL nao cria commits automaticamente e nao faz push.
 
 `jzl status` mostra uma visao curta do estado operacional:
 
+- workspace, quando `jzl.workspace.json` existir;
 - tipo do projeto;
 - sessao e agent atual;
 - task atual;
