@@ -23,6 +23,7 @@
 - Criado RFC-0013 para planejar Template Packs v0.2.
 - Criados RFCs para Ecosystem Model, Distribution System e Compatibility Versioning.
 - Criado RFC-0017 para planejar Installer System.
+- Implementado `jzl install --source <path>` e `jzl installed` para registrar plugins locais sem copiar codigo.
 - Atualizado roadmap com secao v0.2.
 - Adicionada nota no README sobre arquitetura via RFCs.
 

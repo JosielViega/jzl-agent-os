@@ -152,6 +152,8 @@ Os comandos ainda usam `--role` por compatibilidade, mas a documentacao nova usa
 
 ```sh
 jzl init --type game
+jzl install --source <path>
+jzl installed
 jzl boot --role <role>
 jzl session start <role>
 jzl session resume
@@ -224,6 +226,17 @@ jzl git current
 - `jzl git current` mostra a task atual e o commit vinculado.
 
 O JZL nao cria commits automaticamente e nao faz push.
+
+## Install
+
+O JZL pode registrar um plugin local do ecossistema sem copiar o codigo do plugin:
+
+```sh
+jzl install --source "C:\\PROJETOS\\jzl-plugin-git"
+jzl installed
+```
+
+O registro fica em `.jzl/installed/`.
 
 ## Status
 

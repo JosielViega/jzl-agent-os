@@ -1,6 +1,6 @@
 # RFC-0015: Distribution System
 
-Status: draft  
+Status: draft, instalacao local minima iniciada  
 Target: v0.2
 
 ## Objetivo
@@ -47,20 +47,20 @@ O primeiro installer planejado e `filesystem`, para instalacao local por caminho
 
 ## Instalacao Local Por Caminho
 
-Primeira forma planejada:
+Primeira forma implementada:
 
 ```txt
-jzl install <component-type> <local-path>
+jzl install --source <local-path>
 ```
 
-Exemplo conceitual:
+Exemplo:
 
 ```sh
-jzl install plugin ./plugins/git
-jzl install template ./templates/game
+jzl install --source ./plugins/jzl-plugin-git
+jzl installed
 ```
 
-Este RFC nao implementa esses comandos.
+Esta etapa registra plugins locais em `.jzl/installed/`, mas ainda nao copia codigo para o workspace.
 
 ## Instalacao Futura
 
@@ -119,8 +119,23 @@ Ele descobre e instala componentes. Depois da instalacao:
 
 ## Fora De Escopo
 
-Este RFC nao adiciona comandos.
-
-Este RFC nao implementa instalacao.
-
 Este RFC nao define fonte remota oficial.
+
+## Implementacao Inicial
+
+Comandos iniciais:
+
+- `jzl install --source <path>`
+- `jzl install --source <path> --force`
+- `jzl installed`
+
+Comportamento:
+
+- usa Installer Registry para resolver o installer da source;
+- usa Filesystem Installer para ler `jzl.plugin.json` ou `manifest.json`;
+- valida `type: plugin`;
+- registra manifest em `.jzl/installed/plugins/<name>/manifest.json`;
+- salva source original no registro;
+- atualiza `.jzl/installed/installed.json`;
+- bloqueia duplicidade sem `--force`;
+- nao copia codigo do plugin.

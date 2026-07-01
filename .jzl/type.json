@@ -1,0 +1,25 @@
+{
+  "type": "game",
+  "agents": [
+    "diretor",
+    "arquiteto",
+    "programador",
+    "revisor",
+    "testador",
+    "documentador",
+    "gameplay",
+    "performance",
+    "ui-game",
+    "audio",
+    "save-system",
+    "level-design"
+  ],
+  "sectors": [
+    "gameplay",
+    "performance",
+    "ui-game",
+    "audio",
+    "save-system",
+    "level-design"
+  ]
+}

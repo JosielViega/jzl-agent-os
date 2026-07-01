@@ -6,6 +6,7 @@ import { linkCurrentTaskToCommit, showCurrentGitLink, showGitStatus } from './co
 import { showHistory } from './commands/history.js';
 import { initProject } from './commands/init.js';
 import { archiveInboxMessage, readInboxMessage, showInbox } from './commands/inbox.js';
+import { installComponent, listInstalled } from './commands/install.js';
 import { addJournalEntry, showJournal, showJournalSummary } from './commands/journal.js';
 import { nextStep } from './commands/next-step.js';
 import { runPreflight } from './commands/preflight.js';
@@ -28,6 +29,14 @@ export async function run(argv, options = {}) {
 
   if (domain === 'init') {
     return initProject({ cwd, type: parsed.flags.type, io });
+  }
+
+  if (domain === 'install') {
+    return installComponent({ cwd, source: parsed.flags.source, force: Boolean(parsed.flags.force), io });
+  }
+
+  if (domain === 'installed') {
+    return listInstalled({ cwd, io });
   }
 
   if (domain === 'boot') {
@@ -154,6 +163,8 @@ export async function run(argv, options = {}) {
 function printHelp(io) {
   io.log(`jzl init --type game
 jzl boot --role <role>
+jzl install --source <path>
+jzl installed
 jzl session start <role>
 jzl session resume
 jzl whoami

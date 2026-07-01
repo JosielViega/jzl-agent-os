@@ -8,6 +8,16 @@ jzl init --type game
 
 Cria `jzl.workspace.json`, `.jzl`, agents, contracts, setores e estrutura base do projeto.
 
+## Install
+
+```sh
+jzl install --source <path>
+jzl install --source <path> --force
+jzl installed
+```
+
+Instala o registro de um plugin local do ecossistema usando o Filesystem Installer. Esta versao nao copia codigo do plugin para o workspace.
+
 ## Sessao E Boot
 
 Os comandos atuais usam `--role` por compatibilidade. Em documentacao de arquitetura, o conceito equivalente e Agent.

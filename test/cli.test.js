@@ -979,6 +979,58 @@ test('filesystem installer reads external jzl-plugin-git fixture', async () => {
   assert.equal(typeof provider.services.status, 'function');
 });
 
+test('install command installs local plugin from filesystem source', async () => {
+  const cwd = makeTempDir();
+  const output = capture();
+  const fixtureDir = path.join(testDir, 'fixtures', 'jzl-plugin-git');
+
+  await run(['init', '--type', 'game'], { cwd, io: output.io });
+  output.clear();
+  await run(['install', '--source', fixtureDir], { cwd, io: output.io });
+
+  const recordPath = path.join(cwd, '.jzl', 'installed', 'plugins', 'git', 'manifest.json');
+  const record = JSON.parse(fs.readFileSync(recordPath, 'utf8'));
+  const index = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'installed', 'installed.json'), 'utf8'));
+
+  assert.match(output.text(), /componente instalado: git/);
+  assert.match(output.text(), /tipo: plugin/);
+  assert.match(output.text(), /capabilities: version-control/);
+  assert.match(output.text(), /providers: git-provider/);
+  assert.equal(record.name, 'git');
+  assert.equal(record.type, 'plugin');
+  assert.equal(record.source, path.resolve(fixtureDir));
+  assert.equal(index.components[0].name, 'git');
+});
+
+test('install command blocks duplicate plugin without force', async () => {
+  const cwd = makeTempDir();
+  const output = capture();
+  const fixtureDir = path.join(testDir, 'fixtures', 'jzl-plugin-git');
+
+  await run(['init', '--type', 'game'], { cwd, io: output.io });
+  await run(['install', '--source', fixtureDir], { cwd, io: output.io });
+
+  await assert.rejects(
+    () => run(['install', '--source', fixtureDir], { cwd, io: output.io }),
+    /Plugin ja instalado: git/
+  );
+});
+
+test('install command overwrites duplicate plugin with force and installed lists components', async () => {
+  const cwd = makeTempDir();
+  const output = capture();
+  const fixtureDir = path.join(testDir, 'fixtures', 'jzl-plugin-git');
+
+  await run(['init', '--type', 'game'], { cwd, io: output.io });
+  await run(['install', '--source', fixtureDir], { cwd, io: output.io });
+  await run(['install', '--source', fixtureDir, '--force'], { cwd, io: output.io });
+  output.clear();
+  await run(['installed'], { cwd, io: output.io });
+
+  assert.match(output.text(), /installed: 1/);
+  assert.match(output.text(), /- git \[plugin\]/);
+});
+
 function makeTempDir() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'jzl-agent-os-'));
 }
