@@ -59,6 +59,14 @@ O Kernel e a fronteira sagrada do JZL. Ele deve conhecer apenas conceitos generi
 
 Tecnologias especificas devem viver fora do Kernel, por plugins e capabilities.
 
+## Core E Ecosystem
+
+Core contem Kernel, CLI, Workspace, Registries, Event Bus, Capability Resolver e Distribution Registry.
+
+Ecosystem contem Plugins, Templates, Profiles, Policies e Packs.
+
+O Core deve ser pequeno e estavel. Componentes do ecossistema podem viver em repositorios proprios.
+
 ## Workspace
 
 Workspace e a unidade maxima do JZL. Todo estado operacional pertence a um Workspace.
@@ -75,6 +83,7 @@ Registries planejados:
 
 - Services Registry
 - Plugins Registry
+- Distribution Registry
 - Capabilities Registry
 - Templates Registry
 - Profiles Registry
@@ -92,6 +101,12 @@ Workspaces, Agents, Plugins, Capabilities e Tasks podem evoluir por estados docu
 Domain representa uma area funcional dentro de um Workspace, como gameplay, backend, website, admin ou billing.
 
 Project e uma implementacao concreta dentro de um Domain.
+
+## Compatibilidade
+
+Componentes do ecossistema devem declarar compatibilidade com o Core por manifestos versionados.
+
+Campos esperados incluem `jzlCoreRange`, `componentVersion`, `manifestVersion`, `capabilities` e `provides`.
 
 ## Tres Leis Do Kernel
 

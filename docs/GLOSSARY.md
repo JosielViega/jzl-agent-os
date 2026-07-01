@@ -8,6 +8,14 @@ Unidade operacional persistente que possui contrato, sessao, inbox, outbox e jou
 
 Nucleo do JZL. Conhece apenas conceitos genericos e protege invariantes do sistema.
 
+## Core
+
+Parte pequena e estavel do JZL: Kernel, CLI, Workspace, Registries, Event Bus, Capability Resolver e Distribution Registry.
+
+## Ecosystem
+
+Conjunto de componentes externos ou extensivos: Plugins, Templates, Profiles, Policies e Packs.
+
 ## Runtime
 
 Ambiente operacional em que comandos, agents, estado local, eventos e plugins interagem.
@@ -51,6 +59,14 @@ Configuracao operacional que ajusta comportamento, defaults ou preferencias para
 ## Registry
 
 Componente de descoberta que registra services, plugins, capabilities, templates ou profiles sem acoplamento direto entre partes do sistema.
+
+## Distribution Registry
+
+Registro responsavel por descobrir, instalar e listar componentes do ecossistema.
+
+## Pack
+
+Componente distribuivel que agrupa plugins, templates, profiles, policies ou outros artefatos do ecossistema.
 
 ## Contract
 

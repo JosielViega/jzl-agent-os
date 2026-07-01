@@ -116,7 +116,7 @@ Tres leis do Kernel:
 - Lei 2: Nenhuma RFC nasce sem problema real.
 - Lei 3: Kernel e sagrado.
 
-RFCs estruturais da v0.2 tambem definem Workspace Manifest, Registry System, Lifecycle Model e Domain Model.
+RFCs estruturais da v0.2 tambem definem Workspace Manifest, Registry System, Lifecycle Model, Domain Model, Ecosystem Model, Distribution System e Compatibility Versioning.
 
 ## Exemplo Completo: Game
 

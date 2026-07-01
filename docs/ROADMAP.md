@@ -23,6 +23,7 @@ Antes de adicionar novas funcionalidades, a v0.2 deve consolidar a arquitetura p
 - Kernel Services para centralizar regras e acesso a `.jzl`.
 - Plugin System para remover integracoes especificas do nucleo.
 - Template System para substituir inicializacao fixa por templates declarativos.
+- Template Packs para tornar templates instalaveis e aplicaveis a Workspace ou Domain.
 - Event Bus para separar publicacao de eventos e reacoes.
 - Dogfooding para desenvolver o JZL usando o proprio JZL.
 - Capability System para desacoplar Kernel de ferramentas especificas.
@@ -31,6 +32,9 @@ Antes de adicionar novas funcionalidades, a v0.2 deve consolidar a arquitetura p
 - Registry System para descoberta sem acoplamento.
 - Lifecycle Model para estados explicitos.
 - Domain Model para workspaces com multiplas areas funcionais.
+- Ecosystem Model para separar Core de componentes externos.
+- Distribution System para instalar plugins, templates, profiles, policies e packs.
+- Compatibility Versioning para proteger Core e componentes.
 
 Status: em planejamento via `docs/rfcs/`.
 

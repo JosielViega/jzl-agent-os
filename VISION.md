@@ -76,6 +76,9 @@ Direcoes esperadas:
 - Templates por tipo de projeto.
 - Plugins externos por capability.
 - Registries para descoberta sem acoplamento.
+- Core pequeno separado de um ecossistema extensivel.
+- Distribution Registry para instalar componentes do ecossistema.
+- Compatibilidade versionada entre Core e componentes externos.
 - Event Bus com rastreabilidade forte.
 - Policies configuraveis.
 - Lifecycle explicito para entidades centrais.
