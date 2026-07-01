@@ -6,7 +6,15 @@
 jzl init --type game
 ```
 
-Cria `jzl.workspace.json`, `.jzl`, agents, contracts, setores e estrutura base do projeto.
+Cria `jzl.workspace.json`, `workspace/`, `.jzl`, agents, contracts, setores e estrutura base do projeto no layout RFC-0018.
+
+## Migrate
+
+```sh
+jzl migrate
+```
+
+Migra workspaces legados para o layout RFC-0018, separando Workspace Definition em `workspace/` e Workspace Runtime em `.jzl/`.
 
 ## Install
 

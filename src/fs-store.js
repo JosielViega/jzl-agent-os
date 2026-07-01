@@ -2,9 +2,46 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export const JZL_DIR = '.jzl';
+export const WORKSPACE_DIR = 'workspace';
 
 export function jzlPath(cwd, ...parts) {
   return path.join(cwd, JZL_DIR, ...parts);
+}
+
+export function workspaceDefinitionPath(cwd, ...parts) {
+  return path.join(cwd, WORKSPACE_DIR, ...parts);
+}
+
+export function workspaceRuntimePath(cwd, ...parts) {
+  return jzlPath(cwd, ...parts);
+}
+
+export function runtimeSessionPath(cwd, ...parts) {
+  return workspaceRuntimePath(cwd, 'session', ...parts);
+}
+
+export function runtimeInboxPath(cwd, ...parts) {
+  return workspaceRuntimePath(cwd, 'inbox', ...parts);
+}
+
+export function runtimeOutboxPath(cwd, ...parts) {
+  return workspaceRuntimePath(cwd, 'outbox', ...parts);
+}
+
+export function runtimeJournalPath(cwd, ...parts) {
+  return workspaceRuntimePath(cwd, 'journal', ...parts);
+}
+
+export function runtimeDataPath(cwd, ...parts) {
+  return workspaceRuntimePath(cwd, 'runtime', ...parts);
+}
+
+export function runtimeCachePath(cwd, ...parts) {
+  return workspaceRuntimePath(cwd, 'cache', ...parts);
+}
+
+export function definitionContractPath(cwd, name) {
+  return workspaceDefinitionPath(cwd, 'contracts', `${name}.md`);
 }
 
 export function ensureJzl(cwd) {
@@ -37,6 +74,13 @@ export function readJson(file, fallback = null) {
   return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
 
+export function readJsonFirst(files, fallback = null) {
+  for (const file of files) {
+    if (fs.existsSync(file)) return readJson(file, fallback);
+  }
+  return fallback;
+}
+
 export function writeTextIfMissing(file, content) {
   ensureDir(path.dirname(file));
   if (!fs.existsSync(file)) {
@@ -54,6 +98,13 @@ export function appendText(file, content) {
 export function readText(file, fallback = '') {
   if (!fs.existsSync(file)) return fallback;
   return fs.readFileSync(file, 'utf8');
+}
+
+export function readTextFirst(files, fallback = '') {
+  for (const file of files) {
+    if (fs.existsSync(file)) return readText(file, fallback);
+  }
+  return fallback;
 }
 
 export function listJson(dir) {

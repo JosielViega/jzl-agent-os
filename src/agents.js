@@ -1,5 +1,21 @@
 import fs from 'node:fs';
-import { appendText, ensureDir, jzlPath, listJson, makeId, nowIso, readJson, readText, writeJson } from './fs-store.js';
+import {
+  appendText,
+  definitionContractPath,
+  ensureDir,
+  jzlPath,
+  listJson,
+  makeId,
+  nowIso,
+  readJsonFirst,
+  readTextFirst,
+  runtimeDataPath,
+  runtimeInboxPath,
+  runtimeJournalPath,
+  runtimeOutboxPath,
+  runtimeSessionPath,
+  writeJson
+} from './fs-store.js';
 import { publish as publishBusEvent, readLog } from './kernel/eventBus.js';
 
 export const ROLE_AGENTS = ['diretor', 'arquiteto', 'programador', 'revisor', 'testador', 'documentador'];
@@ -11,33 +27,38 @@ export function agentPath(cwd, role, ...parts) {
 }
 
 export function agentExists(cwd, role) {
-  return fs.existsSync(agentPath(cwd, role));
+  return fs.existsSync(runtimeInboxPath(cwd, role))
+    || fs.existsSync(runtimeSessionPath(cwd, 'agents', `${role}.json`))
+    || fs.existsSync(definitionContractPath(cwd, role))
+    || fs.existsSync(agentPath(cwd, role));
 }
 
 export function ensureAgentDirs(cwd, role) {
-  ensureDir(agentPath(cwd, role, 'inbox'));
-  ensureDir(agentPath(cwd, role, 'outbox'));
+  ensureDir(runtimeInboxPath(cwd, role));
+  ensureDir(runtimeOutboxPath(cwd, role));
 }
 
 export function listInbox(cwd, role) {
-  return listJson(agentPath(cwd, role, 'inbox'))
+  return listAgentJson(cwd, role, 'inbox')
     .filter((item) => !['archived', 'resolved', 'completed'].includes(item.status))
     .filter((item) => item.type !== 'task' || item.status === 'pending')
     .sort(byCreatedAt);
 }
 
 export function listInboxAll(cwd, role) {
-  return listJson(agentPath(cwd, role, 'inbox')).sort(byCreatedAt);
+  return listAgentJson(cwd, role, 'inbox').sort(byCreatedAt);
 }
 
 export function listOutbox(cwd, role) {
-  return listJson(agentPath(cwd, role, 'outbox'))
+  return listAgentJson(cwd, role, 'outbox')
     .filter((item) => !['archived', 'resolved', 'completed'].includes(item.status))
     .sort(byCreatedAt);
 }
 
 export function listDependencies(cwd, role, taskId = null) {
-  return listJson(jzlPath(cwd, 'dependencies'))
+  const runtimeItems = listJson(runtimeDataPath(cwd, 'dependencies'));
+  const items = runtimeItems.length ? runtimeItems : listJson(jzlPath(cwd, 'dependencies'));
+  return items
     .filter((item) => item.from === role || item.to === role)
     .filter((item) => !taskId || item.taskId === taskId)
     .sort(byCreatedAt);
@@ -50,15 +71,18 @@ export function listPendingDependencies(cwd, role, taskId = null) {
 }
 
 export function saveInboxItem(cwd, role, item) {
-  writeJson(agentPath(cwd, role, 'inbox', `${item.id}.json`), item);
+  writeJson(runtimeInboxPath(cwd, role, `${item.id}.json`), item);
 }
 
 export function readInboxItem(cwd, role, id) {
-  return readJson(agentPath(cwd, role, 'inbox', `${id}.json`), null);
+  return readJsonFirst([
+    runtimeInboxPath(cwd, role, `${id}.json`),
+    agentPath(cwd, role, 'inbox', `${id}.json`)
+  ], null);
 }
 
 export function saveOutboxItem(cwd, role, item) {
-  writeJson(agentPath(cwd, role, 'outbox', `${item.id}.json`), item);
+  writeJson(runtimeOutboxPath(cwd, role, `${item.id}.json`), item);
 }
 
 export function createAgentMessage(cwd, { from, to, type = 'message', title = '', summary = '', description = '', reason = '' }) {
@@ -93,12 +117,15 @@ export function readEvents(cwd, limit = 10) {
 
 export function appendJournal(cwd, role, text) {
   const entry = `\n## ${nowIso()}\n${text}\n`;
-  appendText(agentPath(cwd, role, 'journal.md'), entry);
+  appendText(runtimeJournalPath(cwd, `${role}.md`), entry);
   appendEvent(cwd, 'journal.add', { role, text });
 }
 
 export function readJournal(cwd, role) {
-  return readText(agentPath(cwd, role, 'journal.md'), '');
+  return readTextFirst([
+    runtimeJournalPath(cwd, `${role}.md`),
+    agentPath(cwd, role, 'journal.md')
+  ], '');
 }
 
 export function readJournalEntries(cwd, role) {
@@ -123,7 +150,10 @@ export function readJournalSummary(cwd, role, maxLines = 5) {
 }
 
 export function readAgentSession(cwd, role) {
-  return readJson(agentPath(cwd, role, 'session.json'), {
+  return readJsonFirst([
+    runtimeSessionPath(cwd, 'agents', `${role}.json`),
+    agentPath(cwd, role, 'session.json')
+  ], {
     name: role,
     contract: 'Contrato nao definido.',
     permissions: [],
@@ -132,13 +162,24 @@ export function readAgentSession(cwd, role) {
 }
 
 export function saveAgentSession(cwd, role, session) {
-  writeJson(agentPath(cwd, role, 'session.json'), session);
+  writeJson(runtimeSessionPath(cwd, 'agents', `${role}.json`), session);
 }
 
 export function readAgentContract(cwd, role) {
-  return readText(agentPath(cwd, role, 'contract.md'), '');
+  return readTextFirst([
+    definitionContractPath(cwd, role),
+    agentPath(cwd, role, 'contract.md'),
+    jzlPath(cwd, 'contracts', `${role}.md`)
+  ], '');
 }
 
 function byCreatedAt(a, b) {
   return String(a.createdAt).localeCompare(String(b.createdAt));
+}
+
+function listAgentJson(cwd, role, box) {
+  const runtimeDir = box === 'inbox' ? runtimeInboxPath(cwd, role) : runtimeOutboxPath(cwd, role);
+  const runtimeItems = listJson(runtimeDir);
+  if (runtimeItems.length) return runtimeItems;
+  return listJson(agentPath(cwd, role, box));
 }

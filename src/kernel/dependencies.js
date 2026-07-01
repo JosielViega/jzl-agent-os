@@ -1,5 +1,5 @@
-import { agentExists, agentPath, listDependencies, saveInboxItem } from '../agents.js';
-import { jzlPath, makeId, nowIso, readJson, writeJson } from '../fs-store.js';
+import { agentExists, listDependencies, saveInboxItem } from '../agents.js';
+import { jzlPath, makeId, nowIso, readJsonFirst, runtimeDataPath, runtimeInboxPath, writeJson } from '../fs-store.js';
 import { publishEvent } from './events.js';
 
 export function createDependency(cwd, { from, to, task, reason }) {
@@ -18,7 +18,7 @@ export function createDependency(cwd, { from, to, task, reason }) {
     summary: null
   };
 
-  writeJson(jzlPath(cwd, 'dependencies', `${dependency.id}.json`), dependency);
+  writeJson(runtimeDataPath(cwd, 'dependencies', `${dependency.id}.json`), dependency);
   if (agentExists(cwd, to)) {
     saveInboxItem(cwd, to, {
       ...dependency,
@@ -31,8 +31,9 @@ export function createDependency(cwd, { from, to, task, reason }) {
 }
 
 export function resolveDependency(cwd, { role, id, summary }) {
-  const file = jzlPath(cwd, 'dependencies', `${id}.json`);
-  const dependency = readJson(file, null);
+  const file = runtimeDataPath(cwd, 'dependencies', `${id}.json`);
+  const legacyFile = jzlPath(cwd, 'dependencies', `${id}.json`);
+  const dependency = readJsonFirst([file, legacyFile], null);
   if (!dependency || (dependency.from !== role && dependency.to !== role)) {
     throw new Error('Dependencia nao encontrada para o agente atual.');
   }
@@ -43,7 +44,7 @@ export function resolveDependency(cwd, { role, id, summary }) {
   dependency.resolvedAt = nowIso();
   writeJson(file, dependency);
   if (agentExists(cwd, dependency.to)) {
-    writeJson(agentPath(cwd, dependency.to, 'inbox', `${dependency.id}.json`), {
+    writeJson(runtimeInboxPath(cwd, dependency.to, `${dependency.id}.json`), {
       ...dependency,
       status: 'resolved',
       relatedDependencyId: dependency.id
@@ -72,4 +73,3 @@ export function resolveDependency(cwd, { role, id, summary }) {
 export function readDependencies(cwd, role, taskId = null) {
   return listDependencies(cwd, role, taskId);
 }
-

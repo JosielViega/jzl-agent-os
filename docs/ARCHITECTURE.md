@@ -10,7 +10,7 @@ RFCs propoem mudancas. ADRs registram decisoes aceitas. A Constituicao define os
 
 ## Workspace Definition E Runtime
 
-A v0.2 separa conceitualmente Workspace Definition e Workspace Runtime.
+A v0.2 separa Workspace Definition e Workspace Runtime. A implementacao inicial foi introduzida pelo RFC-0018.
 
 Workspace Definition e persistente e versionavel. Ela deve migrar para:
 
@@ -38,7 +38,7 @@ Workspace Runtime e local e efemero. Ele deve permanecer em `.jzl`:
   runtime/
 ```
 
-A estrutura atual de `.jzl/agents` continua existindo por compatibilidade, mas nao deve ser tratada como modelo final de definicao versionavel.
+A estrutura legada de `.jzl/agents` continua sendo lida por compatibilidade, mas nao deve ser tratada como modelo final de definicao versionavel.
 
 ## Estrutura `.jzl` Atual
 

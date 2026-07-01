@@ -1,6 +1,6 @@
 # RFC-0018: Workspace Runtime
 
-Status: proposta  
+Status: implementacao inicial  
 Data: 2026-07-01
 
 ## Contexto
@@ -143,7 +143,17 @@ Alternativa granular, se for necessario versionar algum arquivo legado:
 
 A decisao final de `.gitignore` deve considerar compatibilidade com workspaces existentes.
 
-## Migracao Futura
+## Implementacao Inicial
+
+A Sprint 1 implementou:
+
+- Workspace Migration Service em `src/kernel/migrations/`;
+- Migration `0001-rfc-0018-layout`;
+- comando `jzl migrate`;
+- `jzl init --type game` criando novos workspaces no layout RFC-0018;
+- Kernel Services usando helpers de Workspace Definition e Workspace Runtime com fallback legado.
+
+## Migracao
 
 A migracao deve:
 
@@ -154,19 +164,14 @@ A migracao deve:
 - classificar instalacoes entre declaradas e carregadas;
 - documentar um plano de rollback.
 
-Comando futuro possivel:
+Comando implementado:
 
 ```sh
-jzl migrate runtime-layout
+jzl migrate
 ```
-
-Esse comando ainda nao deve ser implementado nesta RFC.
 
 ## Fora De Escopo
 
-- Alterar comandos atuais.
-- Alterar o Kernel nesta etapa.
-- Criar o comando `jzl migrate runtime-layout`.
 - Remover compatibilidade com `.jzl/agents`.
 - Alterar `.gitignore` automaticamente.
 

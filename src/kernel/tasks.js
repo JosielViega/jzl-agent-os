@@ -1,6 +1,6 @@
-import { listInboxAll, listPendingDependencies, readAgentSession, saveAgentSession, saveInboxItem } from '../agents.js';
-import { agentPath, appendJournal } from '../agents.js';
-import { ensureJzl, makeId, nowIso, readJson, writeJson } from '../fs-store.js';
+import { listInboxAll, listPendingDependencies, readAgentSession, readInboxItem, saveAgentSession, saveInboxItem } from '../agents.js';
+import { appendJournal } from '../agents.js';
+import { ensureJzl, makeId, nowIso } from '../fs-store.js';
 import { getCurrentTask, saveTask } from '../state.js';
 import { publishEvent } from './events.js';
 
@@ -25,7 +25,7 @@ export function createTask(cwd, { to, title, description = '', from = 'system' }
 }
 
 export function takeTask(cwd, { role, id }) {
-  const task = readJson(agentPath(cwd, role, 'inbox', `${id}.json`), null);
+  const task = readInboxItem(cwd, role, id);
   if (!task || task.type !== 'task') {
     throw new Error('Task nao encontrada na inbox do agente atual.');
   }
@@ -60,7 +60,7 @@ export function completeTask(cwd, { role, summary }) {
   task.status = 'completed';
   task.summary = summary;
   task.completedAt = nowIso();
-  writeJson(agentPath(cwd, role, 'inbox', `${task.id}.json`), task);
+  saveInboxItem(cwd, role, task);
   appendJournal(cwd, role, `Tarefa concluida: ${task.title}\nResumo: ${summary}`);
   publishEvent(cwd, 'task.complete', { id: task.id, role, summary });
 
@@ -72,4 +72,3 @@ export function completeTask(cwd, { role, summary }) {
   const pendingTasks = listInboxAll(cwd, role).filter((item) => item.type === 'task' && item.status === 'pending');
   return { task, pendingTasks };
 }
-

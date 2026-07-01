@@ -1,4 +1,4 @@
-import { ensureJzl, jzlPath, readJson, writeJson } from '../fs-store.js';
+import { ensureJzl, readJson, workspaceDefinitionPath, writeJson } from '../fs-store.js';
 import { loadInstallers } from '../installers/index.js';
 import { resolveInstaller } from '../kernel/registries/index.js';
 
@@ -15,7 +15,7 @@ export function installComponent({ cwd, source, force = false, io }) {
     throw new Error(`Tipo de componente nao suportado: ${metadata.type}`);
   }
 
-  const installPath = jzlPath(cwd, 'installed', 'plugins', metadata.name, 'manifest.json');
+  const installPath = workspaceDefinitionPath(cwd, 'installed', 'plugins', metadata.name, 'manifest.json');
   const existing = readJson(installPath, null);
   if (existing && !force) {
     throw new Error(`Plugin ja instalado: ${metadata.name}. Use --force para sobrescrever.`);
@@ -41,7 +41,7 @@ export function installComponent({ cwd, source, force = false, io }) {
 
 export function listInstalled({ cwd, io }) {
   ensureJzl(cwd);
-  const index = readJson(jzlPath(cwd, 'installed', 'installed.json'), { components: [] });
+  const index = readJson(workspaceDefinitionPath(cwd, 'installed', 'installed.json'), { components: [] });
   const components = index.components || [];
   if (!components.length) {
     io.log('installed: vazio');
@@ -55,7 +55,7 @@ export function listInstalled({ cwd, io }) {
 }
 
 function updateInstalledIndex(cwd, record) {
-  const indexPath = jzlPath(cwd, 'installed', 'installed.json');
+  const indexPath = workspaceDefinitionPath(cwd, 'installed', 'installed.json');
   const index = readJson(indexPath, { components: [] });
   const components = (index.components || []).filter((item) => !(item.type === record.type && item.name === record.name));
   components.push({

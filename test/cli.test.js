@@ -58,17 +58,15 @@ test('init creates JZL and game project structure', async () => {
   assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'project.md')), true);
   assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'type.json')), true);
   assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'events.log')), true);
-  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'session.json')), true);
-  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'roles', 'diretor.json')), true);
-  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'contracts', 'programador.md')), true);
-  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'sectors', 'gameplay.json')), true);
-  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'agents', 'programador', 'contract.md')), true);
-  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'agents', 'gameplay', 'contract.md')), true);
-  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'agents', 'gameplay', 'inbox')), true);
-  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'agents', 'performance', 'outbox')), true);
-  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'agents', 'programador', 'inbox')), true);
-  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'agents', 'programador', 'outbox')), true);
-  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'agents', 'programador', 'journal.md')), true);
+  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'session', 'session.json')), true);
+  assert.equal(fs.existsSync(path.join(cwd, 'workspace', 'domains', 'game.json')), true);
+  assert.equal(fs.existsSync(path.join(cwd, 'workspace', 'contracts', 'programador.md')), true);
+  assert.equal(fs.existsSync(path.join(cwd, 'workspace', 'contracts', 'gameplay.md')), true);
+  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'inbox', 'gameplay')), true);
+  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'outbox', 'performance')), true);
+  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'inbox', 'programador')), true);
+  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'outbox', 'programador')), true);
+  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'journal', 'programador.md')), true);
   assert.equal(fs.existsSync(path.join(cwd, 'src')), true);
   assert.equal(fs.existsSync(path.join(cwd, 'assets')), true);
   assert.equal(fs.existsSync(path.join(cwd, 'docs')), true);
@@ -101,6 +99,69 @@ test('findWorkspaceRoot finds root by workspace manifest', async () => {
   fs.mkdirSync(nested, { recursive: true });
 
   assert.equal(findWorkspaceRoot(nested), cwd);
+});
+
+test('migrate moves legacy workspace runtime and definition to RFC-0018 layout', async () => {
+  const cwd = makeTempDir();
+  const output = capture();
+
+  fs.mkdirSync(path.join(cwd, '.jzl', 'agents', 'programador', 'inbox'), { recursive: true });
+  fs.mkdirSync(path.join(cwd, '.jzl', 'agents', 'programador', 'outbox'), { recursive: true });
+  fs.mkdirSync(path.join(cwd, '.jzl', 'dependencies'), { recursive: true });
+  fs.mkdirSync(path.join(cwd, '.jzl', 'installed'), { recursive: true });
+  fs.writeFileSync(path.join(cwd, '.jzl', 'type.json'), JSON.stringify({ type: 'game' }), 'utf8');
+  fs.writeFileSync(path.join(cwd, '.jzl', 'events.log'), '', 'utf8');
+  fs.writeFileSync(path.join(cwd, '.jzl', 'session.json'), JSON.stringify({ currentRole: 'programador' }), 'utf8');
+  fs.writeFileSync(path.join(cwd, '.jzl', 'agents', 'programador', 'contract.md'), '# programador\n', 'utf8');
+  fs.writeFileSync(path.join(cwd, '.jzl', 'agents', 'programador', 'session.json'), JSON.stringify({ name: 'programador', currentTaskId: 'task-1' }), 'utf8');
+  fs.writeFileSync(path.join(cwd, '.jzl', 'agents', 'programador', 'journal.md'), '# Journal\n', 'utf8');
+  fs.writeFileSync(path.join(cwd, '.jzl', 'agents', 'programador', 'inbox', 'task-1.json'), JSON.stringify({
+    id: 'task-1',
+    type: 'task',
+    to: 'programador',
+    title: 'Migrar layout',
+    status: 'current',
+    createdAt: '2026-07-01T00:00:00.000Z'
+  }), 'utf8');
+  fs.writeFileSync(path.join(cwd, '.jzl', 'agents', 'programador', 'outbox', 'message-1.json'), JSON.stringify({
+    id: 'message-1',
+    type: 'message',
+    from: 'programador',
+    to: 'revisor',
+    status: 'unread',
+    createdAt: '2026-07-01T00:00:00.000Z'
+  }), 'utf8');
+  fs.writeFileSync(path.join(cwd, '.jzl', 'dependencies', 'dep-1.json'), JSON.stringify({
+    id: 'dep-1',
+    type: 'dependency',
+    from: 'programador',
+    to: 'gameplay',
+    taskId: 'task-1',
+    status: 'pending',
+    createdAt: '2026-07-01T00:00:00.000Z'
+  }), 'utf8');
+  fs.writeFileSync(path.join(cwd, '.jzl', 'installed', 'installed.json'), JSON.stringify({ components: [] }), 'utf8');
+
+  await run(['migrate'], { cwd, io: output.io });
+
+  assert.match(output.text(), /workspace detectado: sim/);
+  assert.match(output.text(), /layout atual: legacy/);
+  assert.match(output.text(), /layout destino: rfc-0018/);
+  assert.match(output.text(), /migration executada: 0001-rfc-0018-layout/);
+  assert.match(output.text(), /status final: rfc-0018 valido/);
+  assert.equal(fs.existsSync(path.join(cwd, 'jzl.workspace.json')), true);
+  assert.equal(fs.existsSync(path.join(cwd, 'workspace', 'contracts', 'programador.md')), true);
+  assert.equal(fs.existsSync(path.join(cwd, 'workspace', 'installed', 'installed.json')), true);
+  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'session', 'session.json')), true);
+  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'session', 'agents', 'programador.json')), true);
+  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'inbox', 'programador', 'task-1.json')), true);
+  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'outbox', 'programador', 'message-1.json')), true);
+  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'journal', 'programador.md')), true);
+  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'runtime', 'dependencies', 'dep-1.json')), true);
+
+  output.clear();
+  await run(['task', 'current'], { cwd, io: output.io });
+  assert.match(output.text(), /tarefa atual: Migrar layout/);
 });
 
 test('session start and resume show current role state', async () => {
@@ -141,9 +202,9 @@ test('task flow creates, lists, completes, and moves to history', async () => {
   assert.match(text, /tarefa assumida:/);
   assert.match(text, /tarefa atual: Criar fase 1/);
   assert.match(text, /tarefa concluida:/);
-  const agentSession = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'agents', 'programador', 'session.json'), 'utf8'));
+  const agentSession = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'session', 'agents', 'programador.json'), 'utf8'));
   assert.equal(agentSession.currentTaskId, undefined);
-  assert.match(fs.readFileSync(path.join(cwd, '.jzl', 'agents', 'programador', 'journal.md'), 'utf8'), /Fase 1 pronta/);
+  assert.match(fs.readFileSync(path.join(cwd, '.jzl', 'journal', 'programador.md'), 'utf8'), /Fase 1 pronta/);
   assert.match(fs.readFileSync(path.join(cwd, '.jzl', 'events.log'), 'utf8'), /task.complete/);
   assert.match(fs.readFileSync(path.join(cwd, '.jzl', 'events.log'), 'utf8'), /task.take/);
 });
@@ -167,8 +228,8 @@ test('dependency, handoff, whoami, and next-step use current role context', asyn
   assert.match(output.text(), /dependencias abertas: design/);
   assert.match(output.text(), /aguardar\/resolver dependencia antes de concluir/);
   assert.match(output.text(), /jzl dependency list/);
-  assert.equal(fs.readdirSync(path.join(cwd, '.jzl', 'agents', 'programador', 'outbox')).length, 1);
-  assert.equal(fs.readdirSync(path.join(cwd, '.jzl', 'agents', 'testador', 'inbox')).length, 1);
+  assert.equal(fs.readdirSync(path.join(cwd, '.jzl', 'outbox', 'programador')).length, 1);
+  assert.equal(fs.readdirSync(path.join(cwd, '.jzl', 'inbox', 'testador')).length, 1);
 });
 
 test('boot starts role session and prints operational briefing', async () => {
@@ -209,7 +270,7 @@ test('boot starts role session and prints operational briefing', async () => {
   assert.match(text, /jzl dependency create --to <sector> --reason/);
   assert.match(text, /jzl handoff create --to revisor --summary/);
 
-  const session = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'session.json'), 'utf8'));
+  const session = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'session', 'session.json'), 'utf8'));
   assert.equal(session.currentRole, 'programador');
 });
 
@@ -221,8 +282,8 @@ test('send creates agent outbox and inbox messages', async () => {
   await run(['session', 'start', 'programador'], { cwd, io: output.io });
   await run(['send', '--to', 'revisor', '--summary', 'Revisar movimento do jogador.'], { cwd, io: output.io });
 
-  assert.equal(fs.readdirSync(path.join(cwd, '.jzl', 'agents', 'programador', 'outbox')).length, 1);
-  assert.equal(fs.readdirSync(path.join(cwd, '.jzl', 'agents', 'revisor', 'inbox')).length, 1);
+  assert.equal(fs.readdirSync(path.join(cwd, '.jzl', 'outbox', 'programador')).length, 1);
+  assert.equal(fs.readdirSync(path.join(cwd, '.jzl', 'inbox', 'revisor')).length, 1);
   assert.match(fs.readFileSync(path.join(cwd, '.jzl', 'events.log'), 'utf8'), /"type":"message"/);
 });
 
@@ -277,7 +338,7 @@ test('journal add appends entry and history shows events', async () => {
   output.clear();
   await run(['history'], { cwd, io: output.io });
 
-  assert.match(fs.readFileSync(path.join(cwd, '.jzl', 'agents', 'documentador', 'journal.md'), 'utf8'), /Decisao registrada/);
+  assert.match(fs.readFileSync(path.join(cwd, '.jzl', 'journal', 'documentador.md'), 'utf8'), /Decisao registrada/);
   assert.match(output.text(), /history:/);
   assert.match(output.text(), /journal.add/);
 });
@@ -289,9 +350,9 @@ test('task create sends task to target agent inbox and records event', async () 
   await run(['init', '--type', 'game'], { cwd, io: output.io });
   await run(['task', 'create', '--to', 'programador', '--title', 'Criar HUD', '--description', 'Mostrar vida e energia.'], { cwd, io: output.io });
 
-  const inboxFiles = fs.readdirSync(path.join(cwd, '.jzl', 'agents', 'programador', 'inbox'));
+  const inboxFiles = fs.readdirSync(path.join(cwd, '.jzl', 'inbox', 'programador'));
   assert.equal(inboxFiles.length, 1);
-  const task = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'agents', 'programador', 'inbox', inboxFiles[0]), 'utf8'));
+  const task = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'inbox', 'programador', inboxFiles[0]), 'utf8'));
   assert.equal(task.type, 'task');
   assert.equal(task.title, 'Criar HUD');
   assert.equal(task.status, 'pending');
@@ -310,8 +371,8 @@ test('task take only takes task from current agent inbox', async () => {
   await run(['task', 'take', '--id', taskId], { cwd, io: output.io });
   await run(['task', 'current'], { cwd, io: output.io });
 
-  const task = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'agents', 'programador', 'inbox', `${taskId}.json`), 'utf8'));
-  const session = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'agents', 'programador', 'session.json'), 'utf8'));
+  const task = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'inbox', 'programador', `${taskId}.json`), 'utf8'));
+  const session = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'session', 'agents', 'programador.json'), 'utf8'));
   assert.equal(task.status, 'current');
   assert.equal(session.currentTaskId, taskId);
   assert.match(output.text(), /tarefa assumida:/);
@@ -354,7 +415,7 @@ test('dependency create links to current task and blocks completion until resolv
   await run(['dependency', 'create', '--to', 'performance', '--reason', 'Definir limite de FPS.'], { cwd, io: output.io });
 
   const dependencyId = firstDependencyId(cwd);
-  const dependency = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'dependencies', `${dependencyId}.json`), 'utf8'));
+  const dependency = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'runtime', 'dependencies', `${dependencyId}.json`), 'utf8'));
   assert.equal(dependency.status, 'pending');
   assert.equal(dependency.taskId, taskId);
 
@@ -371,7 +432,7 @@ test('dependency create links to current task and blocks completion until resolv
   await run(['journal', 'add', '--text', 'Dependencia resolvida e loop pronto.'], { cwd, io: output.io });
   await run(['task', 'complete', '--summary', 'Loop otimizado.'], { cwd, io: output.io });
 
-  const resolved = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'dependencies', `${dependencyId}.json`), 'utf8'));
+  const resolved = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'runtime', 'dependencies', `${dependencyId}.json`), 'utf8'));
   assert.equal(resolved.status, 'resolved');
   assert.match(output.text(), /dependencies: 1/);
   assert.match(output.text(), /dependencia resolvida:/);
@@ -391,7 +452,7 @@ test('sector agent receives dependency and resolve replies to requester', async 
   await run(['dependency', 'create', '--to', 'gameplay', '--reason', 'Definir regras de aceleracao'], { cwd, io: output.io });
 
   const dependencyId = firstDependencyId(cwd);
-  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'agents', 'gameplay', 'inbox', `${dependencyId}.json`)), true);
+  assert.equal(fs.existsSync(path.join(cwd, '.jzl', 'inbox', 'gameplay', `${dependencyId}.json`)), true);
 
   output.clear();
   await run(['boot', '--role', 'gameplay'], { cwd, io: output.io });
@@ -403,13 +464,13 @@ test('sector agent receives dependency and resolve replies to requester', async 
   await run(['dependency', 'resolve', '--id', dependencyId, '--summary', 'Aceleracao cresce ate velocidade maxima.'], { cwd, io: output.io });
   assert.match(output.text(), /dependencia resolvida:/);
 
-  const resolved = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'dependencies', `${dependencyId}.json`), 'utf8'));
+  const resolved = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'runtime', 'dependencies', `${dependencyId}.json`), 'utf8'));
   assert.equal(resolved.status, 'resolved');
   assert.equal(resolved.resolvedBy, 'gameplay');
-  const requesterInbox = fs.readdirSync(path.join(cwd, '.jzl', 'agents', 'programador', 'inbox'));
+  const requesterInbox = fs.readdirSync(path.join(cwd, '.jzl', 'inbox', 'programador'));
   const responseFile = requesterInbox.find((name) => name.startsWith('dependency-response-'));
   assert.ok(responseFile);
-  const response = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'agents', 'programador', 'inbox', responseFile), 'utf8'));
+  const response = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'inbox', 'programador', responseFile), 'utf8'));
   assert.equal(response.type, 'dependency-response');
   assert.equal(response.status, 'unread');
   assert.equal(response.relatedDependencyId, dependencyId);
@@ -691,12 +752,12 @@ test('git link-task saves last commit on current task and git current shows it',
   await run(['git', 'link-task'], { cwd, io: output.io });
   await run(['git', 'current'], { cwd, io: output.io });
 
-  const task = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'agents', 'programador', 'inbox', `${taskId}.json`), 'utf8'));
+  const task = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'inbox', 'programador', `${taskId}.json`), 'utf8'));
   assert.match(task.gitCommit, /^[a-f0-9]{40}$/);
   assert.match(output.text(), /task:/);
   assert.match(output.text(), /commit: [a-f0-9]{40}/);
   assert.match(fs.readFileSync(path.join(cwd, '.jzl', 'events.log'), 'utf8'), /git.link-task/);
-  assert.match(fs.readFileSync(path.join(cwd, '.jzl', 'agents', 'programador', 'journal.md'), 'utf8'), /Git commit vinculado/);
+  assert.match(fs.readFileSync(path.join(cwd, '.jzl', 'journal', 'programador.md'), 'utf8'), /Git commit vinculado/);
 });
 
 test('git commands fail clearly outside git repository', async () => {
@@ -988,9 +1049,9 @@ test('install command installs local plugin from filesystem source', async () =>
   output.clear();
   await run(['install', '--source', fixtureDir], { cwd, io: output.io });
 
-  const recordPath = path.join(cwd, '.jzl', 'installed', 'plugins', 'git', 'manifest.json');
+  const recordPath = path.join(cwd, 'workspace', 'installed', 'plugins', 'git', 'manifest.json');
   const record = JSON.parse(fs.readFileSync(recordPath, 'utf8'));
-  const index = JSON.parse(fs.readFileSync(path.join(cwd, '.jzl', 'installed', 'installed.json'), 'utf8'));
+  const index = JSON.parse(fs.readFileSync(path.join(cwd, 'workspace', 'installed', 'installed.json'), 'utf8'));
 
   assert.match(output.text(), /componente instalado: git/);
   assert.match(output.text(), /tipo: plugin/);
@@ -1048,19 +1109,19 @@ function runGit(cwd, args) {
 }
 
 function firstInboxId(cwd, role) {
-  const inboxDir = path.join(cwd, '.jzl', 'agents', role, 'inbox');
+  const inboxDir = path.join(cwd, '.jzl', 'inbox', role);
   const [file] = fs.readdirSync(inboxDir).filter((name) => name.endsWith('.json')).sort();
   return path.basename(file, '.json');
 }
 
 function firstDependencyId(cwd) {
-  const dependencyDir = path.join(cwd, '.jzl', 'dependencies');
+  const dependencyDir = path.join(cwd, '.jzl', 'runtime', 'dependencies');
   const [file] = fs.readdirSync(dependencyDir).filter((name) => name.endsWith('.json')).sort();
   return path.basename(file, '.json');
 }
 
 function firstInboxIdByPrefix(cwd, role, prefix) {
-  const inboxDir = path.join(cwd, '.jzl', 'agents', role, 'inbox');
+  const inboxDir = path.join(cwd, '.jzl', 'inbox', role);
   const [file] = fs.readdirSync(inboxDir).filter((name) => name.startsWith(prefix)).sort();
   return path.basename(file, '.json');
 }

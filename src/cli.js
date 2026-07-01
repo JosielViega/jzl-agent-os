@@ -8,6 +8,7 @@ import { initProject } from './commands/init.js';
 import { archiveInboxMessage, readInboxMessage, showInbox } from './commands/inbox.js';
 import { installComponent, listInstalled } from './commands/install.js';
 import { addJournalEntry, showJournal, showJournalSummary } from './commands/journal.js';
+import { migrateWorkspace } from './commands/migrate.js';
 import { nextStep } from './commands/next-step.js';
 import { runPreflight } from './commands/preflight.js';
 import { showOutbox } from './commands/outbox.js';
@@ -37,6 +38,10 @@ export async function run(argv, options = {}) {
 
   if (domain === 'installed') {
     return listInstalled({ cwd, io });
+  }
+
+  if (domain === 'migrate') {
+    return migrateWorkspace({ cwd, io });
   }
 
   if (domain === 'boot') {
@@ -165,6 +170,7 @@ function printHelp(io) {
 jzl boot --role <role>
 jzl install --source <path>
 jzl installed
+jzl migrate
 jzl session start <role>
 jzl session resume
 jzl whoami

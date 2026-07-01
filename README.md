@@ -7,7 +7,10 @@ JZL nao substitui o Codex. O Codex continua pensando, lendo codigo e implementan
 ## Documentos Centrais
 
 - [VISION.md](VISION.md): visao, missao e direcao para v1.0.
+- [WHY-JZL.md](WHY-JZL.md): razao de existir do projeto.
 - [CONSTITUTION.md](CONSTITUTION.md): regras superiores para decisoes futuras.
+- [ARCHITECTURE-FREEZE.md](ARCHITECTURE-FREEZE.md): arquitetura congelada ao fim da v0.2.
+- [LESSONS-LEARNED.md](LESSONS-LEARNED.md): aprendizados da fase v0.2.
 - [docs/architecture/](docs/architecture/): arquitetura conceitual da v0.2.
 - [docs/specs/HOST-PROTOCOL.md](docs/specs/HOST-PROTOCOL.md): especificacao inicial de comunicacao Host -> Kernel.
 - [docs/GLOSSARY.md](docs/GLOSSARY.md): termos do sistema.
@@ -32,13 +35,13 @@ O JZL resolve isso criando um estado explicito e local:
 
 ### Agents
 
-Um agent e uma unidade operacional persistente. Cada agent vive em `.jzl/agents/<agent>/` e possui:
+Um agent e uma unidade operacional persistente. No layout RFC-0018, definicao e runtime ficam separados:
 
-- `contract.md`
-- `session.json`
-- `inbox/`
-- `outbox/`
-- `journal.md`
+- contrato em `workspace/contracts/<agent>.md`;
+- sessao em `.jzl/session/agents/<agent>.json`;
+- inbox em `.jzl/inbox/<agent>/`;
+- outbox em `.jzl/outbox/<agent>/`;
+- journal em `.jzl/journal/<agent>.md`.
 
 No tipo `game`, o JZL cria agentes de funcao (`diretor`, `arquiteto`, `programador`, `revisor`, `testador`, `documentador`) e agentes/setores (`gameplay`, `performance`, `ui-game`, `audio`, `save-system`, `level-design`).
 
@@ -107,7 +110,7 @@ O Diretor cria tasks, o Programador assume tasks, setores resolvem dependencias,
 
 ## v0.2
 
-A v0.2 esta em fase de arquitetura via RFCs. O objetivo e planejar Kernel Services, Plugin System, Template System, Event Bus, Capability System, ADRs e dogfooding antes de implementar novos comandos funcionais.
+A v0.2 consolidou a arquitetura via RFCs e iniciou a implementacao do Runtime Layout com `jzl migrate`.
 
 Os RFCs vivem em `docs/rfcs/`. Decisoes aceitas vivem em `docs/adr/`. A Constituicao vive em `CONSTITUTION.md` e governa decisoes futuras.
 
@@ -120,6 +123,8 @@ Tres leis do Kernel:
 RFCs estruturais da v0.2 tambem definem Workspace Manifest, Registry System, Lifecycle Model, Domain Model, Ecosystem Model, Distribution System, Compatibility Versioning, Workspace Runtime e Host System.
 
 Host e qualquer processo capaz de operar um Workspace atraves do Kernel. A CLI atual e o primeiro Host pratico; Codex, Claude Code, Cursor, OpenHands, IDE plugins e agents proprios podem se tornar Hosts futuros.
+
+Antes da v0.3, a identidade e a arquitetura da v0.2 foram registradas em `WHY-JZL.md`, `LESSONS-LEARNED.md` e `ARCHITECTURE-FREEZE.md`.
 
 ## Exemplo Completo: Game
 
@@ -155,6 +160,7 @@ Os comandos ainda usam `--role` por compatibilidade, mas a documentacao nova usa
 
 ```sh
 jzl init --type game
+jzl migrate
 jzl install --source <path>
 jzl installed
 jzl boot --role <role>
@@ -193,21 +199,23 @@ jzl next-step
 
 ```txt
 jzl.workspace.json
+workspace/
+  contracts/
+  policies/
+  profiles/
+  templates/
+  domains/
+  installed/
 .jzl/
   project.md
   type.json
   events.log
-  agents/
-    <agent>/
-      contract.md
-      session.json
-      inbox/
-      outbox/
-      journal.md
-  dependencies/
-  handoffs/
-  policies/
-  workflows/
+  session/
+  inbox/
+  outbox/
+  journal/
+  runtime/
+  cache/
 ```
 
 `jzl.workspace.json` identifica o Workspace. `.jzl/type.json` continua existindo por compatibilidade.
@@ -251,7 +259,7 @@ jzl install --source "C:\\PROJETOS\\jzl-plugin-git"
 jzl installed
 ```
 
-O registro fica em `.jzl/installed/`.
+No layout RFC-0018, registros declarados de instalacao ficam em `workspace/installed/`.
 
 ## Status
 

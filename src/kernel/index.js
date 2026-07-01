@@ -5,6 +5,7 @@ export { emit, publish, readLog, subscribe } from './eventBus.js';
 export { publishEvent, readEvents } from './events.js';
 export { addJournalEntry } from './journal.js';
 export { readInbox, sendMessage } from './messages.js';
+export { detectWorkspaceVersion, listMigrations, registerMigration, runMigration, validateWorkspace } from './migrations/index.js';
 export { getCurrentSession, getProject } from './project.js';
 export {
   getService,

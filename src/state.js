@@ -1,14 +1,17 @@
 import fs from 'node:fs';
-import { ensureJzl, jzlPath, listJson, readJson, writeJson } from './fs-store.js';
+import { ensureJzl, jzlPath, listJson, readJson, readJsonFirst, runtimeInboxPath, runtimeSessionPath, writeJson } from './fs-store.js';
 import { agentPath, listInbox, listPendingDependencies, readAgentContract, readAgentSession, saveInboxItem } from './agents.js';
 
 export function loadSession(cwd) {
   ensureJzl(cwd);
-  return readJson(jzlPath(cwd, 'session.json'), { currentRole: null });
+  return readJsonFirst([
+    runtimeSessionPath(cwd, 'session.json'),
+    jzlPath(cwd, 'session.json')
+  ], { currentRole: null });
 }
 
 export function saveSession(cwd, session) {
-  writeJson(jzlPath(cwd, 'session.json'), session);
+  writeJson(runtimeSessionPath(cwd, 'session.json'), session);
 }
 
 export function requireCurrentRole(cwd) {
@@ -49,7 +52,10 @@ export function getOpenTasksForRole(cwd, roleName) {
 export function getCurrentTask(cwd, roleName) {
   const agentSession = readAgentSession(cwd, roleName);
   if (agentSession.currentTaskId) {
-    const task = readJson(agentPath(cwd, roleName, 'inbox', `${agentSession.currentTaskId}.json`), null);
+    const task = readJsonFirst([
+      runtimeInboxPath(cwd, roleName, `${agentSession.currentTaskId}.json`),
+      agentPath(cwd, roleName, 'inbox', `${agentSession.currentTaskId}.json`)
+    ], null);
     if (task && task.status === 'current') return task;
   }
   const tasks = getOpenTasksForRole(cwd, roleName);
@@ -61,8 +67,13 @@ export function saveTask(cwd, task) {
 }
 
 export function removeInboxCopy(cwd, task) {
-  const fsPath = agentPath(cwd, task.to, 'inbox', `${task.id}.json`);
-  if (fs.existsSync(fsPath)) fs.unlinkSync(fsPath);
+  const paths = [
+    runtimeInboxPath(cwd, task.to, `${task.id}.json`),
+    agentPath(cwd, task.to, 'inbox', `${task.id}.json`)
+  ];
+  for (const fsPath of paths) {
+    if (fs.existsSync(fsPath)) fs.unlinkSync(fsPath);
+  }
 }
 
 export function getOpenDependencies(cwd, roleName) {

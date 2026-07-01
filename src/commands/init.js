@@ -1,20 +1,8 @@
 import path from 'node:path';
-import { ensureDir, jzlPath, writeJsonIfMissing, writeTextIfMissing } from '../fs-store.js';
-import { GAME_AGENTS, GAME_SECTORS, agentPath } from '../agents.js';
+import { definitionContractPath, ensureDir, jzlPath, runtimeJournalPath, runtimeSessionPath, workspaceDefinitionPath, writeJsonIfMissing, writeTextIfMissing } from '../fs-store.js';
+import { GAME_AGENTS, GAME_SECTORS } from '../agents.js';
 import { createWorkspaceManifest } from '../kernel/index.js';
-
-const JZL_FOLDERS = [
-  'roles',
-  'contracts',
-  'sectors',
-  'tasks',
-  'inbox',
-  'dependencies',
-  'handoffs',
-  'history',
-  'policies',
-  'workflows'
-];
+import { ensureTargetLayout } from '../kernel/migrations/runner.js';
 
 export function initProject({ cwd, type, io }) {
   if (type !== 'game') {
@@ -23,8 +11,7 @@ export function initProject({ cwd, type, io }) {
 
   ensureDir(jzlPath(cwd));
   createWorkspaceManifest(cwd, { template: 'game', profile: 'solo' });
-  for (const folder of JZL_FOLDERS) ensureDir(jzlPath(cwd, folder));
-  ensureDir(jzlPath(cwd, 'agents'));
+  ensureTargetLayout(cwd);
 
   writeTextIfMissing(jzlPath(cwd, 'project.md'), `# JZL Agent OS
 
@@ -37,9 +24,14 @@ Objetivo: coordenar chats/agentes do Codex por roles, contratos, tarefas, depend
     agents: GAME_AGENTS,
     sectors: GAME_SECTORS
   });
+  writeJsonIfMissing(workspaceDefinitionPath(cwd, 'domains', 'game.json'), {
+    type: 'game',
+    agents: GAME_AGENTS,
+    sectors: GAME_SECTORS
+  });
   writeTextIfMissing(jzlPath(cwd, 'events.log'), '');
 
-  writeJsonIfMissing(jzlPath(cwd, 'session.json'), {
+  writeJsonIfMissing(runtimeSessionPath(cwd, 'session.json'), {
     type: 'game',
     currentRole: null,
     createdAt: new Date().toISOString()
@@ -154,18 +146,12 @@ function createDefaultRoles(cwd) {
   ];
 
   for (const role of roles) {
-    writeJsonIfMissing(jzlPath(cwd, 'roles', `${role.name}.json`), role);
-    writeTextIfMissing(jzlPath(cwd, 'contracts', `${role.name}.md`), renderContract(role));
     createAgent(cwd, role);
   }
 }
 
 function createDefaultSectors(cwd) {
   for (const sector of GAME_SECTORS) {
-    writeJsonIfMissing(jzlPath(cwd, 'sectors', `${sector}.json`), {
-      name: sector,
-      status: 'active'
-    });
     createAgent(cwd, sectorAgent(sector));
   }
 }
@@ -208,12 +194,12 @@ function sectorAgent(name) {
 }
 
 function createAgent(cwd, role) {
-  ensureDir(agentPath(cwd, role.name, 'inbox'));
-  ensureDir(agentPath(cwd, role.name, 'outbox'));
-  writeTextIfMissing(agentPath(cwd, role.name, 'contract.md'), renderContract(role));
-  writeTextIfMissing(agentPath(cwd, role.name, 'journal.md'), `# Journal: ${role.name}
+  ensureDir(jzlPath(cwd, 'inbox', role.name));
+  ensureDir(jzlPath(cwd, 'outbox', role.name));
+  writeTextIfMissing(definitionContractPath(cwd, role.name), renderContract(role));
+  writeTextIfMissing(runtimeJournalPath(cwd, `${role.name}.md`), `# Journal: ${role.name}
 `);
-  writeJsonIfMissing(agentPath(cwd, role.name, 'session.json'), {
+  writeJsonIfMissing(runtimeSessionPath(cwd, 'agents', `${role.name}.json`), {
     name: role.name,
     objective: role.objective,
     contract: role.contract,
