@@ -26,6 +26,7 @@ Core contem:
 - Event Bus
 - Capability Resolver
 - Distribution Registry
+- Installer Registry
 
 O Core deve ser pequeno, previsivel e compativel.
 
@@ -84,6 +85,8 @@ Componentes do ecossistema podem ser distribuidos como:
 - caminhos locais;
 - packs versionados.
 
+Instalacao de componentes deve passar por Installer System. O Core pergunta ao Installer Registry qual installer suporta a source, em vez de conhecer GitHub, npm ou ZIP diretamente.
+
 ## Criterios
 
 - Core nao deve depender de componente de ecossistema especifico.
@@ -98,4 +101,3 @@ Este RFC nao move Git para fora do Core.
 Este RFC nao move game para fora do Core.
 
 Este RFC nao implementa instalacao de componentes.
-

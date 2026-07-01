@@ -22,6 +22,7 @@
 - Migrados comandos `jzl git` para usar `version-control` via `git-provider`, mantendo saida compativel.
 - Criado RFC-0013 para planejar Template Packs v0.2.
 - Criados RFCs para Ecosystem Model, Distribution System e Compatibility Versioning.
+- Criado RFC-0017 para planejar Installer System.
 - Atualizado roadmap com secao v0.2.
 - Adicionada nota no README sobre arquitetura via RFCs.
 

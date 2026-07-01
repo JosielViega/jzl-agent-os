@@ -34,6 +34,7 @@ Antes de adicionar novas funcionalidades, a v0.2 deve consolidar a arquitetura p
 - Domain Model para workspaces com multiplas areas funcionais.
 - Ecosystem Model para separar Core de componentes externos.
 - Distribution System para instalar plugins, templates, profiles, policies e packs.
+- Installer System para instalar componentes a partir de sources locais e futuramente remotas.
 - Compatibility Versioning para proteger Core e componentes.
 
 Status: em planejamento via `docs/rfcs/`.

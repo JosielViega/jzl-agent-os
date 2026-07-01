@@ -64,6 +64,18 @@ Componente de descoberta que registra services, plugins, capabilities, templates
 
 Registro responsavel por descobrir, instalar e listar componentes do ecossistema.
 
+## Installer
+
+Mecanismo que transforma uma component source em manifest/componente instalavel.
+
+## Installer Registry
+
+Registro que descobre qual installer suporta uma source.
+
+## Component Source
+
+Origem de um componente do ecossistema, como caminho local, GitHub, npm, ZIP ou URL.
+
 ## Pack
 
 Componente distribuivel que agrupa plugins, templates, profiles, policies ou outros artefatos do ecossistema.

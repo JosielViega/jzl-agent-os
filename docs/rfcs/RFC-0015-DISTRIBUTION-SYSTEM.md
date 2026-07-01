@@ -31,6 +31,20 @@ Responsabilidades:
 - permitir instalacao local inicialmente;
 - preparar instalacao futura via GitHub ou npm.
 
+Distribution Registry nao instala sources diretamente. Ele registra componentes e manifestos. A escolha do mecanismo de instalacao pertence ao Installer Registry.
+
+## Installer Registry
+
+Installer Registry registra installers capazes de transformar uma source em manifest/componente.
+
+Fluxo:
+
+```txt
+source -> installer -> manifest -> registry -> workspace
+```
+
+O primeiro installer planejado e `filesystem`, para instalacao local por caminho.
+
 ## Instalacao Local Por Caminho
 
 Primeira forma planejada:
@@ -110,4 +124,3 @@ Este RFC nao adiciona comandos.
 Este RFC nao implementa instalacao.
 
 Este RFC nao define fonte remota oficial.
-
