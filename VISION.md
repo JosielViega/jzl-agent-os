@@ -59,6 +59,8 @@ O argumento `--role` permanece por compatibilidade com a CLI atual; o conceito a
 
 O estado fica em `.jzl`, mas agents nao devem editar `.jzl` manualmente. Eles devem usar comandos.
 
+Na arquitetura v0.2, quem opera o Workspace e um Host. A CLI atual e o primeiro Host pratico. Codex, Claude Code, Cursor, OpenHands, IDE plugins e automacoes futuras podem operar o mesmo Workspace como Hosts, sempre atraves do Kernel.
+
 ## Missao
 
 O objetivo do JZL Agent OS nao e tornar agentes mais inteligentes. E tornar equipes de agentes mais organizadas, previsiveis e colaborativas.
@@ -72,6 +74,7 @@ Direcoes esperadas:
 - Kernel pequeno e estavel.
 - Runtime claro para agents.
 - Workspace como unidade maxima.
+- Hosts como processos que operam Workspaces atraves do Kernel.
 - Domains para areas funcionais.
 - Templates por tipo de projeto.
 - Plugins externos por capability.

@@ -24,6 +24,9 @@
 - Criados RFCs para Ecosystem Model, Distribution System e Compatibility Versioning.
 - Criado RFC-0017 para planejar Installer System.
 - Implementado `jzl install --source <path>` e `jzl installed` para registrar plugins locais sem copiar codigo.
+- Criado RFC-0018 para separar Workspace Definition de Workspace Runtime.
+- Criado RFC-0019 para definir Host System e a especificacao inicial `HOST-PROTOCOL.md`.
+- Criado `.gitignore` oficial e removido runtime JZL do indice Git para preparar o repositorio para v0.3.
 - Atualizado roadmap com secao v0.2.
 - Adicionada nota no README sobre arquitetura via RFCs.
 

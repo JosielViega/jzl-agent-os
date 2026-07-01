@@ -32,10 +32,20 @@ Antes de adicionar novas funcionalidades, a v0.2 deve consolidar a arquitetura p
 - Registry System para descoberta sem acoplamento.
 - Lifecycle Model para estados explicitos.
 - Domain Model para workspaces com multiplas areas funcionais.
+- Workspace Runtime Split para separar definicao versionavel de runtime efemero.
+- Host System para separar processos operadores de Agents operacionais.
 - Ecosystem Model para separar Core de componentes externos.
 - Distribution System para instalar plugins, templates, profiles, policies e packs.
 - Installer System para instalar componentes a partir de sources locais e futuramente remotas.
 - Compatibility Versioning para proteger Core e componentes.
+
+Proximos passos previstos apos a definicao do Host System:
+
+1. Runtime Layout.
+2. CLI Host.
+3. External Plugin Loading.
+4. Template Packs.
+5. Host Protocol v1.
 
 Status: em planejamento via `docs/rfcs/`.
 

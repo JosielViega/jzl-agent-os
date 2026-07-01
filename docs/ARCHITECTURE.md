@@ -8,7 +8,39 @@ A arquitetura do JZL e governada por `CONSTITUTION.md`.
 
 RFCs propoem mudancas. ADRs registram decisoes aceitas. A Constituicao define os limites superiores: Kernel pequeno, tecnologias externas como plugins, capabilities antes de ferramentas, Workspace como unidade maxima, eventos para rastreabilidade e compatibilidade explicita.
 
-## Estrutura `.jzl`
+## Workspace Definition E Runtime
+
+A v0.2 separa conceitualmente Workspace Definition e Workspace Runtime.
+
+Workspace Definition e persistente e versionavel. Ela deve migrar para:
+
+```txt
+jzl.workspace.json
+workspace/
+  contracts/
+  policies/
+  profiles/
+  templates/
+  domains/
+  installed/
+```
+
+Workspace Runtime e local e efemero. Ele deve permanecer em `.jzl`:
+
+```txt
+.jzl/
+  session/
+  inbox/
+  outbox/
+  journal/
+  events.log
+  cache/
+  runtime/
+```
+
+A estrutura atual de `.jzl/agents` continua existindo por compatibilidade, mas nao deve ser tratada como modelo final de definicao versionavel.
+
+## Estrutura `.jzl` Atual
 
 ```txt
 .jzl/
@@ -75,6 +107,18 @@ O manifesto futuro `jzl.workspace.json` identifica o Workspace. A pasta `.jzl` g
 
 Um Workspace pode conter Domains e Projects.
 
+## Hosts
+
+Host e qualquer processo capaz de operar um Workspace atraves do Kernel.
+
+Exemplos de Hosts incluem JZL CLI, Codex, Claude Code, Cursor, OpenHands, agentes proprios e futuros IDE plugins.
+
+Host nao e Agent. O Host executa, conversa com usuario, inicia sessoes, chama Kernel Services, instala componentes e carrega plugins. O Agent representa um papel operacional, possui contrato, recebe tasks, gera handoffs e registra journal.
+
+Hosts devem usar Kernel Services, Capability Resolver e Provider System. Eles nao devem editar `.jzl`, manifests ou runtime diretamente.
+
+Multiplos Hosts podem compartilhar o mesmo Workspace. Runtime, events e journals sao compartilhados; sessions devem ser independentes.
+
 ## Registries
 
 Registries permitem descoberta sem acoplamento direto.
@@ -118,7 +162,7 @@ Lei 3: Kernel e sagrado.
 
 ## Modelo De Execucao
 
-O usuario e o Codex interagem apenas por comandos `jzl`. Os comandos leem e escrevem arquivos dentro de `.jzl`, mantendo o estado auditavel e portavel.
+O usuario e o Codex interagem apenas por comandos `jzl`. Comandos escrevem runtime em `.jzl`. Definicoes versionaveis devem migrar para `workspace/`.
 
 ## Nucleo Sem IA
 

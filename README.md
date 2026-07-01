@@ -9,6 +9,7 @@ JZL nao substitui o Codex. O Codex continua pensando, lendo codigo e implementan
 - [VISION.md](VISION.md): visao, missao e direcao para v1.0.
 - [CONSTITUTION.md](CONSTITUTION.md): regras superiores para decisoes futuras.
 - [docs/architecture/](docs/architecture/): arquitetura conceitual da v0.2.
+- [docs/specs/HOST-PROTOCOL.md](docs/specs/HOST-PROTOCOL.md): especificacao inicial de comunicacao Host -> Kernel.
 - [docs/GLOSSARY.md](docs/GLOSSARY.md): termos do sistema.
 - [docs/NAMING.md](docs/NAMING.md): padroes de nomenclatura.
 - [docs/DESIGN.md](docs/DESIGN.md): principios de design.
@@ -116,7 +117,9 @@ Tres leis do Kernel:
 - Lei 2: Nenhuma RFC nasce sem problema real.
 - Lei 3: Kernel e sagrado.
 
-RFCs estruturais da v0.2 tambem definem Workspace Manifest, Registry System, Lifecycle Model, Domain Model, Ecosystem Model, Distribution System e Compatibility Versioning.
+RFCs estruturais da v0.2 tambem definem Workspace Manifest, Registry System, Lifecycle Model, Domain Model, Ecosystem Model, Distribution System, Compatibility Versioning, Workspace Runtime e Host System.
+
+Host e qualquer processo capaz de operar um Workspace atraves do Kernel. A CLI atual e o primeiro Host pratico; Codex, Claude Code, Cursor, OpenHands, IDE plugins e agents proprios podem se tornar Hosts futuros.
 
 ## Exemplo Completo: Game
 
@@ -208,6 +211,18 @@ jzl.workspace.json
 ```
 
 `jzl.workspace.json` identifica o Workspace. `.jzl/type.json` continua existindo por compatibilidade.
+
+Nota de arquitetura v0.2: `.jzl` deve ser tratado como runtime local. Definicoes versionaveis do Workspace devem migrar futuramente para `workspace/`, incluindo contracts, policies, profiles, templates, domains e instalacoes declaradas.
+
+### Workspace Definition
+
+Workspace Definition e a parte persistente e versionavel do Workspace. Ela inclui `jzl.workspace.json` e, no layout futuro, arquivos em `workspace/` como contracts, policies, profiles, templates, domains e instalacoes declaradas.
+
+### Workspace Runtime
+
+Workspace Runtime e o estado local e efemero produzido pelos comandos JZL. Ele inclui sessoes, inbox, outbox, journals operacionais, events, cache, runtime e instalacoes carregadas em `.jzl`.
+
+O repositorio ignora o runtime JZL por padrao para evitar que estado local de agentes entre em commits.
 
 ## Desenvolvimento
 

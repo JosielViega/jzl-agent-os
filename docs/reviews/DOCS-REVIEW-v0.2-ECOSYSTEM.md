@@ -41,6 +41,7 @@ Nao houve implementacao funcional. Nao foram adicionados comandos. Kernel nao fo
 1. Distribution Registry.
 2. Externalizar Git plugin.
 3. Externalizar Game template.
+4. Separar Workspace Definition de Workspace Runtime.
 
 ## Pendencias
 
@@ -48,4 +49,4 @@ Nao houve implementacao funcional. Nao foram adicionados comandos. Kernel nao fo
 - Definir formato local de instalacao.
 - Definir validacao de `jzlCoreRange`.
 - Definir como componentes externos serao carregados sem quebrar workspaces atuais.
-
+- Definir estrategia de `.gitignore` para runtime local em `.jzl`.

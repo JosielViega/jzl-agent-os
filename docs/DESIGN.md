@@ -30,6 +30,10 @@ Exemplos:
 
 Agents devem alterar estado com comandos JZL. Edicao manual de `.jzl` deve ser excecao de manutencao, nao fluxo normal.
 
+## Definition Separada De Runtime
+
+Definicoes versionaveis do Workspace devem viver fora do runtime local. `.jzl` deve ser tratado como estado operacional efemero, enquanto `workspace/` deve concentrar contracts, policies, profiles, templates, domains e instalacoes declaradas.
+
 ## Eventos Como Fonte De Rastreabilidade
 
 Eventos existem para explicar o que aconteceu, quando aconteceu e qual agent ou sistema iniciou a mudanca.

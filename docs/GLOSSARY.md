@@ -20,6 +20,14 @@ Conjunto de componentes externos ou extensivos: Plugins, Templates, Profiles, Po
 
 Ambiente operacional em que comandos, agents, estado local, eventos e plugins interagem.
 
+## Host
+
+Processo capaz de operar um Workspace atraves do Kernel, como JZL CLI, Codex, Claude Code, Cursor, OpenHands, IDE plugins ou automacoes proprias.
+
+## Host Protocol
+
+Especificacao de comunicacao entre Hosts e o JZL Agent OS. Define responsabilidades, nomenclatura e fluxo Host -> Workspace -> Kernel -> Agent Session.
+
 ## Constitution
 
 Documento superior que governa decisoes futuras do JZL Agent OS.
@@ -27,6 +35,14 @@ Documento superior que governa decisoes futuras do JZL Agent OS.
 ## Workspace
 
 Unidade maxima do JZL. Representa o ambiente operacional onde Kernel, Runtime, Agents, Plugins, Events, Profiles, Policies e Projects coexistem. O futuro manifesto do Workspace sera `jzl.workspace.json`.
+
+## Workspace Definition
+
+Parte persistente e versionavel do Workspace, incluindo manifesto, contracts, policies, profiles, templates, domains e instalacoes declaradas.
+
+## Workspace Runtime
+
+Estado local e efemero do Workspace, incluindo sessoes, inbox, outbox, journal, events, cache e runtime operacional em `.jzl`.
 
 ## Project
 
