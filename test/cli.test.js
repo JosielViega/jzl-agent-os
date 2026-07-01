@@ -3,6 +3,7 @@ import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { test } from 'node:test';
 import { run } from '../src/cli.js';
 import { getCapabilityProvider, hasCapability, listAvailableCapabilities, requireCapability } from '../src/kernel/capabilities.js';
@@ -44,6 +45,8 @@ import { findWorkspaceRoot, readWorkspaceManifest } from '../src/kernel/workspac
 import { loadPlugins, getPlugin, listPlugins } from '../src/plugins/index.js';
 import { clearPlugins } from '../src/plugins/registry.js';
 import gitPlugin from '../src/plugins/git/index.js';
+
+const testDir = path.dirname(fileURLToPath(import.meta.url));
 
 test('init creates JZL and game project structure', async () => {
   const cwd = makeTempDir();
@@ -958,6 +961,22 @@ test('filesystem installer reads jzl.plugin.json metadata', () => {
   assert.equal(metadata.type, 'plugin');
   assert.equal(metadata.manifest.componentVersion, '0.1.0');
   assert.equal(metadata.manifestPath, path.join(componentDir, 'jzl.plugin.json'));
+});
+
+test('filesystem installer reads external jzl-plugin-git fixture', async () => {
+  const fixtureDir = path.join(testDir, 'fixtures', 'jzl-plugin-git');
+  const metadata = filesystemInstaller.read(fixtureDir);
+  const pluginModule = await import(pathToFileURL(path.join(fixtureDir, 'index.js')).href);
+  const activated = pluginModule.activate();
+  const [provider] = activated.providers;
+
+  assert.equal(metadata.name, 'git');
+  assert.equal(metadata.type, 'plugin');
+  assert.equal(metadata.manifest.providers[0].name, 'git-provider');
+  assert.equal(metadata.manifest.capabilities.includes('version-control'), true);
+  assert.equal(provider.name, 'git-provider');
+  assert.equal(provider.capabilities.includes('version-control'), true);
+  assert.equal(typeof provider.services.status, 'function');
 });
 
 function makeTempDir() {
