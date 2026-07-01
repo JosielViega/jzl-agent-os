@@ -12,8 +12,10 @@ import {
   clearPlugins as clearKernelPlugins,
   clearProfiles,
   clearProviders,
+  clearInstallers,
   clearServices,
   clearTemplates,
+  getInstaller,
   getProvider,
   getPlugin as getKernelPlugin,
   getProfile,
@@ -23,16 +25,21 @@ import {
   listPlugins as listKernelPlugins,
   listProfiles,
   listProviders,
+  listInstallers,
   listServices,
   listTemplates,
+  registerInstaller,
   registerProvider,
   registerPlugin as registerKernelPlugin,
   registerProfile,
   registerService,
   registerTemplate,
   resolveCapability,
+  resolveInstaller,
   resolveProviderByCapability
 } from '../src/kernel/registries/index.js';
+import { filesystemInstaller } from '../src/installers/filesystem.js';
+import { loadInstallers } from '../src/installers/index.js';
 import { findWorkspaceRoot, readWorkspaceManifest } from '../src/kernel/workspace.js';
 import { loadPlugins, getPlugin, listPlugins } from '../src/plugins/index.js';
 import { clearPlugins } from '../src/plugins/registry.js';
@@ -901,6 +908,56 @@ test('kernel profiles registry registers and lists profiles', () => {
 
   assert.equal(getProfile('solo'), profile);
   assert.deepEqual(listProfiles(), [{ name: 'solo', profile }]);
+});
+
+test('kernel installers registry registers, lists, and resolves filesystem installer', () => {
+  clearInstallers();
+  const source = makeTempDir();
+
+  registerInstaller(filesystemInstaller);
+
+  assert.equal(getInstaller('filesystem').name, 'filesystem');
+  assert.equal(listInstallers()[0].name, 'filesystem');
+  assert.equal(resolveInstaller(source).name, 'filesystem');
+});
+
+test('loadInstallers registers filesystem installer', () => {
+  clearInstallers();
+
+  loadInstallers();
+
+  assert.equal(getInstaller('filesystem').name, 'filesystem');
+});
+
+test('filesystem installer reads manifest.json metadata', () => {
+  const componentDir = makeTempDir();
+  fs.writeFileSync(path.join(componentDir, 'manifest.json'), JSON.stringify({
+    name: 'jzl-plugin-git',
+    type: 'plugin',
+    componentVersion: '0.1.0'
+  }), 'utf8');
+
+  const metadata = filesystemInstaller.read(componentDir);
+
+  assert.equal(metadata.name, 'jzl-plugin-git');
+  assert.equal(metadata.type, 'plugin');
+  assert.equal(metadata.manifest.componentVersion, '0.1.0');
+  assert.equal(metadata.manifestPath, path.join(componentDir, 'manifest.json'));
+});
+
+test('filesystem installer reads jzl.plugin.json metadata', () => {
+  const componentDir = makeTempDir();
+  fs.writeFileSync(path.join(componentDir, 'jzl.plugin.json'), JSON.stringify({
+    name: 'jzl-plugin-git',
+    componentVersion: '0.1.0'
+  }), 'utf8');
+
+  const metadata = filesystemInstaller.read(componentDir);
+
+  assert.equal(metadata.name, 'jzl-plugin-git');
+  assert.equal(metadata.type, 'plugin');
+  assert.equal(metadata.manifest.componentVersion, '0.1.0');
+  assert.equal(metadata.manifestPath, path.join(componentDir, 'jzl.plugin.json'));
 });
 
 function makeTempDir() {

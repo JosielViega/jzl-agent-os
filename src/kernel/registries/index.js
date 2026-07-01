@@ -4,3 +4,4 @@ export { clearCapabilities, listCapabilities, registerCapability, resolveCapabil
 export { clearProviders, getProvider, listProviders, registerProvider, resolveProviderByCapability } from './providersRegistry.js';
 export { clearTemplates, getTemplate, listTemplates, registerTemplate } from './templatesRegistry.js';
 export { clearProfiles, getProfile, listProfiles, registerProfile } from './profilesRegistry.js';
+export { clearInstallers, getInstaller, listInstallers, registerInstaller, resolveInstaller } from './installersRegistry.js';
