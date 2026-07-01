@@ -119,13 +119,20 @@ Campos minimos esperados:
 
 ```json
 {
-  "hostName": "jzl-cli",
-  "hostVersion": "0.2.0",
+  "name": "cli",
+  "type": "host",
+  "version": "0.1.0",
   "supportedKernelRange": ">=0.2.0"
 }
 ```
 
 O Workspace podera recusar operacoes quando o Host nao declarar compatibilidade suficiente.
+
+## CLI Host
+
+O primeiro Host oficial e `cli`.
+
+Ele e registrado automaticamente durante a inicializacao da CLI, sem alterar a saida dos comandos.
 
 ## Versao Do Protocolo
 

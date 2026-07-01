@@ -39,13 +39,12 @@ Antes de adicionar novas funcionalidades, a v0.2 deve consolidar a arquitetura p
 - Installer System para instalar componentes a partir de sources locais e futuramente remotas.
 - Compatibility Versioning para proteger Core e componentes.
 
-Proximos passos previstos apos a definicao do Host System:
+Proximos passos previstos apos a definicao do Host System e do CLI Host:
 
 1. Runtime Layout.
-2. CLI Host.
-3. External Plugin Loading.
-4. Template Packs.
-5. Host Protocol v1.
+2. External Plugin Loading.
+3. Template Packs.
+4. Host Protocol v1.
 
 Status: em planejamento via `docs/rfcs/`.
 

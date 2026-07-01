@@ -5,3 +5,4 @@ export { clearProviders, getProvider, listProviders, registerProvider, resolvePr
 export { clearTemplates, getTemplate, listTemplates, registerTemplate } from './templatesRegistry.js';
 export { clearProfiles, getProfile, listProfiles, registerProfile } from './profilesRegistry.js';
 export { clearInstallers, getInstaller, listInstallers, registerInstaller, resolveInstaller } from './installersRegistry.js';
+export { clearHosts, getHost, listHosts, registerHost } from './hostsRegistry.js';

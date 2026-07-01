@@ -26,7 +26,10 @@ export {
   registerTemplate,
   getProfile,
   listProfiles,
-  registerProfile
+  registerProfile,
+  getHost,
+  listHosts,
+  registerHost
 } from './registries/index.js';
 export { completeTask, createTask, takeTask } from './tasks.js';
 export { createWorkspaceManifest, findWorkspaceRoot, getWorkspaceInfo, readWorkspaceManifest } from './workspace.js';

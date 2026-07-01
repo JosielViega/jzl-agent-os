@@ -1,0 +1,11 @@
+{
+  "name": "cli",
+  "type": "host",
+  "version": "0.1.0",
+  "supportedKernelRange": ">=0.1.0",
+  "capabilities": [
+    "workspace-operation",
+    "kernel-services",
+    "local-filesystem"
+  ]
+}

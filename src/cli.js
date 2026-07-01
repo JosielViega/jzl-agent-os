@@ -16,9 +16,11 @@ import { sendMessage } from './commands/send.js';
 import { resumeSession, startSession, whoami } from './commands/session.js';
 import { showStatus } from './commands/status.js';
 import { completeTask, createTask, showCurrentTask, takeTask } from './commands/task.js';
+import { loadHosts } from './hosts/index.js';
 import { parseArgs } from './parse.js';
 
 export async function run(argv, options = {}) {
+  loadHosts();
   const cwd = options.cwd || process.cwd();
   const io = options.io || console;
   const parsed = parseArgs(argv);

@@ -119,6 +119,8 @@ Hosts devem usar Kernel Services, Capability Resolver e Provider System. Eles na
 
 Multiplos Hosts podem compartilhar o mesmo Workspace. Runtime, events e journals sao compartilhados; sessions devem ser independentes.
 
+O primeiro Host oficial e `cli`, registrado automaticamente pela CLI durante a inicializacao do processo.
+
 ## Registries
 
 Registries permitem descoberta sem acoplamento direto.
@@ -127,6 +129,7 @@ Registries planejados:
 
 - Services Registry
 - Plugins Registry
+- Hosts Registry
 - Distribution Registry
 - Capabilities Registry
 - Templates Registry

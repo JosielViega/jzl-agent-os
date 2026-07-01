@@ -124,6 +124,8 @@ RFCs estruturais da v0.2 tambem definem Workspace Manifest, Registry System, Lif
 
 Host e qualquer processo capaz de operar um Workspace atraves do Kernel. A CLI atual e o primeiro Host pratico; Codex, Claude Code, Cursor, OpenHands, IDE plugins e agents proprios podem se tornar Hosts futuros.
 
+O Host oficial atual e `cli`, registrado automaticamente quando a CLI inicia. Isso nao altera a saida dos comandos.
+
 Antes da v0.3, a identidade e a arquitetura da v0.2 foram registradas em `WHY-JZL.md`, `LESSONS-LEARNED.md` e `ARCHITECTURE-FREEZE.md`.
 
 ## Exemplo Completo: Game

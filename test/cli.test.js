@@ -14,9 +14,11 @@ import {
   clearProfiles,
   clearProviders,
   clearInstallers,
+  clearHosts,
   clearServices,
   clearTemplates,
   getInstaller,
+  getHost as getKernelHost,
   getProvider,
   getPlugin as getKernelPlugin,
   getProfile,
@@ -27,9 +29,11 @@ import {
   listProfiles,
   listProviders,
   listInstallers,
+  listHosts as listKernelHosts,
   listServices,
   listTemplates,
   registerInstaller,
+  registerHost as registerKernelHost,
   registerProvider,
   registerPlugin as registerKernelPlugin,
   registerProfile,
@@ -42,6 +46,8 @@ import {
 import { filesystemInstaller } from '../src/installers/filesystem.js';
 import { loadInstallers } from '../src/installers/index.js';
 import { findWorkspaceRoot, readWorkspaceManifest } from '../src/kernel/workspace.js';
+import { loadHosts, getHost, listHosts } from '../src/hosts/index.js';
+import { clearHosts as clearRuntimeHosts } from '../src/hosts/hostRegistry.js';
 import { loadPlugins, getPlugin, listPlugins } from '../src/plugins/index.js';
 import { clearPlugins } from '../src/plugins/registry.js';
 import gitPlugin from '../src/plugins/git/index.js';
@@ -991,6 +997,50 @@ test('loadInstallers registers filesystem installer', () => {
   loadInstallers();
 
   assert.equal(getInstaller('filesystem').name, 'filesystem');
+});
+
+test('kernel hosts registry registers and lists hosts', () => {
+  clearHosts();
+  const host = {
+    manifest: {
+      name: 'cli',
+      type: 'host',
+      version: '0.1.0',
+      supportedKernelRange: '>=0.1.0',
+      capabilities: ['workspace-operation']
+    }
+  };
+
+  registerKernelHost(host);
+
+  assert.equal(getKernelHost('cli'), host);
+  assert.deepEqual(listKernelHosts(), [host]);
+});
+
+test('host system loads cli host into runtime and kernel registries', () => {
+  clearRuntimeHosts();
+  clearHosts();
+
+  const hosts = loadHosts();
+
+  assert.equal(hosts.length, 1);
+  assert.equal(getHost('cli').manifest.type, 'host');
+  assert.equal(getHost('cli').manifest.supportedKernelRange, '>=0.1.0');
+  assert.equal(getHost('cli').manifest.capabilities.includes('kernel-services'), true);
+  assert.equal(listHosts()[0].manifest.name, 'cli');
+  assert.equal(getKernelHost('cli').manifest.name, 'cli');
+});
+
+test('cli run registers cli host without changing help output', async () => {
+  clearRuntimeHosts();
+  clearHosts();
+  const output = capture();
+
+  await run(['--help'], { cwd: makeTempDir(), io: output.io });
+
+  assert.equal(getKernelHost('cli').manifest.name, 'cli');
+  assert.match(output.text(), /jzl init --type game/);
+  assert.doesNotMatch(output.text(), /host/i);
 });
 
 test('filesystem installer reads manifest.json metadata', () => {

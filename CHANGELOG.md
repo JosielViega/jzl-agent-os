@@ -29,6 +29,7 @@
 - Criado `.gitignore` oficial e removido runtime JZL do indice Git para preparar o repositorio para v0.3.
 - Criados `WHY-JZL.md`, `LESSONS-LEARNED.md` e `ARCHITECTURE-FREEZE.md` para registrar identidade, aprendizados e congelamento arquitetural da v0.2.
 - Implementado RFC-0018 com Workspace Migration Service, Migration 0001, comando `jzl migrate` e layout novo para `jzl init`.
+- Implementado CLI Host com Host Registry no Kernel e registro automatico silencioso da CLI como primeiro Host oficial.
 - Atualizado roadmap com secao v0.2.
 - Adicionada nota no README sobre arquitetura via RFCs.
 

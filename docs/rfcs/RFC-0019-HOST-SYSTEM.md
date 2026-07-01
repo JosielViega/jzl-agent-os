@@ -1,6 +1,6 @@
 # RFC-0019: Host System
 
-Status: proposta  
+Status: implementacao inicial  
 Data: 2026-07-01
 
 ## Objetivo
@@ -192,9 +192,20 @@ Esta RFC define o conceito e as decisoes arquiteturais.
 
 A especificacao operacional inicial vive em `docs/specs/HOST-PROTOCOL.md`.
 
+## Implementacao Inicial
+
+A Sprint 2 implementou:
+
+- Host Registry no Kernel em `src/kernel/registries/hostsRegistry.js`;
+- Host System em `src/hosts/`;
+- CLI Host em `src/hosts/cli/`;
+- registro automatico e silencioso do CLI Host durante a inicializacao da CLI;
+- exports `registerHost`, `getHost` e `listHosts` pelo Kernel.
+
+A implementacao nao altera a saida externa da CLI.
+
 ## Fora De Escopo
 
-- Implementar Host Registry.
 - Alterar comandos existentes.
 - Alterar o Kernel.
 - Criar protocolo de rede.
